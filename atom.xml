@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>From Arylo</title>
+  <icon>https://www.gravatar.com/avatar/0f016086c3691ef09d629295503d9835</icon>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://arylo.github.io/"/>
+  <updated>2018-05-22T04:27:31.955Z</updated>
+  <id>http://arylo.github.io/</id>
+  
+  <author>
+    <name>AryloYeung</name>
+    <email>arylo.open@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>`mocha` 改成 `ts-mocha`</title>
+    <link href="http://arylo.github.io/2018/01/08/javascript/ts-mocha/"/>
+    <id>http://arylo.github.io/2018/01/08/javascript/ts-mocha/</id>
+    <published>2018-01-08T13:37:43.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>&gt; 本文链接：<a href="http://arylo.github.io/2018/01/08/javascript/ts-mocha/">http://arylo.github.io/2018/01/08/javascript/ts-mocha/</a><br>&gt; 大概需要阅读时间: 3分钟<br><br>—<br><br># Get Start<br><br>原本的测试单元都是和源码用<code>tsc</code>编译到<code>dist</code>文件夹后, 再启动测试, 这样无疑浪费不少的时间, 无意间找到这个框架.<br><br># Its Example<br><br>官方的写法, 就是像<code>mocha</code>那样, 直接运行<code>ts-mocha</code>就可以了, 但我就直接报错, 提示我<code>[ERROR] tsconfig_1.loadSync is not a function</code>.<br><br><code>Google</code>了一下, 原因不明. 貌似没人遇上这个情况, 是我弄错了吗? 那行, 我去瞧瞧别人的例子.<br><br># Other Example<br><br>别人也是直接用<code>ts-mocha</code>, 但有点不同, 在<a href="https://github.com/sehrope/node-dogh/blob/master/test/mocha.opts" target="_blank" rel="noopener"><code>mocha.opts</code></a>里面有一句<code>--require ts-mocha</code>,<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--require ts-mocha</span><br><span class="line">--require should</span><br></pre></td></tr></table></figure><p>这个在文档中没有任何的说明, 难道用了就有神效?</p><h1 id="And-Me"><a href="#And-Me" class="headerlink" title="And Me"></a>And Me</h1><p>在<code>mocha.opts</code>里面补上<code>--require ts-mocha</code>后, 其余照旧(除了提出<code>tsc</code>这步), 测试成功运行. 可能原本官方就提供这个方法, 后来在<code>README</code>里面删除了. 不过现在可以了. 希望以后不要再踩这个坑吧.</p><hr><h1 id="Update-at-2018-01-09"><a href="#Update-at-2018-01-09" class="headerlink" title="Update at 2018-01-09"></a>Update at 2018-01-09</h1><p>之前用上了<code>ts-mocha</code>, 后来我看了一下代码, 其实就是一个<code>ts-node</code>的二次封装, 所以干脆就用回<code>ts-node</code>. 将<code>mocha.opts</code>里面的<code>--require ts-mocha</code>换成<code>--require ts-node/register</code>, 执行测试一下可以用.</p><h2 id="Generate-Cover-Reporter-Fail"><a href="#Generate-Cover-Reporter-Fail" class="headerlink" title="Generate Cover Reporter Fail"></a>Generate Cover Reporter Fail</h2><p>虽然测试正常运行, 但生成的覆盖报告却是空的, 可能是参数没有补齐. 好在<code>nyc</code>官方提供了<a href="https://istanbul.js.org/docs/tutorials/typescript/" target="_blank" rel="noopener">相关的文档</a>, 注意其中几点就行了:</p><ol><li>需要<code>source-map-support</code></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev <span class="built_in">source</span>-map-support</span><br></pre></td></tr></table></figure><ol start="3"><li>补上重要的<code>nyc</code>参数</li></ol><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  "extension": [</span><br><span class="line">    ".ts", ".tsx"</span><br><span class="line">  ],</span><br><span class="line">  "all": true,</span><br><span class="line">  "cache": true</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>再适当地用<code>include</code>和<code>exclude</code>, 覆盖报告就回来了.</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&amp;gt; 本文链接：&lt;a href=&quot;http://arylo.github.io/2018/01/08/javascript/ts-mocha/&quot;&gt;http://arylo.github.io/2018/01/08/javascript/ts-
+      
+    
+    </summary>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/categories/Javascript/"/>
+    
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="nodejs" scheme="http://arylo.github.io/tags/nodejs/"/>
+    
+      <category term="npm" scheme="http://arylo.github.io/tags/npm/"/>
+    
+      <category term="mocha" scheme="http://arylo.github.io/tags/mocha/"/>
+    
+      <category term="typescript" scheme="http://arylo.github.io/tags/typescript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>好用的Node 库</title>
+    <link href="http://arylo.github.io/2017/12/10/javascript/npms/"/>
+    <id>http://arylo.github.io/2017/12/10/javascript/npms/</id>
+    <published>2017-12-10T12:22:38.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2017/12/10/javascript/npms/">http://arylo.github.io/2017/12/10/javascript/npms/</a><br>大概需要阅读时间: 13分钟</p></blockquote><hr><p>从13年接触angular开始，就不断接触摸索各种node库，感叹前端圈的变化之大。下面本人将用过的，收集来的库整理出来，望有缘人需要它们</p><h1 id="已经用过了的"><a href="#已经用过了的" class="headerlink" title="已经用过了的"></a>已经用过了的</h1><h2 id="博客类"><a href="#博客类" class="headerlink" title="博客类"></a>博客类</h2><ul><li><a href="https://www.npmjs.com/package/hexo" title="Node Library: hexo" target="_blank" rel="noopener">hexo</a><ul><li><a href="https://www.npmjs.com/package/hexo-admin" title="Node Library: hexo-admin" target="_blank" rel="noopener">hexo-admin</a><br>这个插件背后是一个美好的爱情故事</li><li><a href="https://www.npmjs.com/package/hexo-deployer-git" title="Node Library: hexo-deployer-git" target="_blank" rel="noopener">hexo-deployer-git</a><br>自从某个版本出问题之后, 我就用<code>Travis</code>帮我发布</li><li><a href="https://www.npmjs.com/package/hexo-filter-cleanup" title="Node Library: hexo-filter-cleanup" target="_blank" rel="noopener">hexo-filter-<a id="more"></a>cleanup</a><br>咱就是用这个压缩混肴的</li></ul></li></ul><h2 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h2><h3 id="Grunt"><a href="#Grunt" class="headerlink" title="Grunt"></a>Grunt</h3><p><code>Grunt</code>已经算是古老的产物, <code>Gulp</code>出现后就一下子超越他, 不过某些旧项目还是需要了解它的.</p><ul><li><a href="https://www.npmjs.com/package/grunt" title="Node Library: grunt" target="_blank" rel="noopener">grunt</a><ul><li><a href="https://www.npmjs.com/package/grunt-contrib-htmlmin" title="Node Library: grunt-contrib-htmlmin" target="_blank" rel="noopener">grunt-contrib-htmlmin</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-stylus" title="Node Library: grunt-contrib-stylus" target="_blank" rel="noopener">grunt-contrib-stylus</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-cssmin" title="Node Library: grunt-contrib-cssmin" target="_blank" rel="noopener">grunt-contrib-cssmin</a></li><li><a href="https://www.npmjs.com/package/grunt-autoprefixer" title="Node Library: grunt-autoprefixer" target="_blank" rel="noopener">grunt-autoprefixer</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-imagemin" title="Node Library: grunt-contrib-imagemin" target="_blank" rel="noopener">grunt-contrib-imagemin</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-clean" title="Node Library: grunt-contrib-clean" target="_blank" rel="noopener">grunt-contrib-clean</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-copy" title="Node Library: grunt-contrib-copy" target="_blank" rel="noopener">grunt-contrib-copy</a></li><li><a href="https://www.npmjs.com/package/grunt-contrib-watch" title="Node Library: grunt-contrib-watch" target="_blank" rel="noopener">grunt-contrib-watch</a></li></ul></li></ul><h3 id="Gulp"><a href="#Gulp" class="headerlink" title="Gulp"></a>Gulp</h3><ul><li><a href="https://www.npmjs.com/package/gulp" title="Node Library: gulp" target="_blank" rel="noopener">gulp</a></li><li><a href="https://www.npmjs.com/package/gulp-cli" title="Node Library: gulp-cli" target="_blank" rel="noopener">gulp-cli</a></li><li><a href="https://www.npmjs.com/package/gulp-jade" title="Node Library: gulp-jade" target="_blank" rel="noopener">gulp-jade</a><br><code>jade</code>已经改名叫<code>pug</code></li><li><a href="https://www.npmjs.com/package/gulp-pug" title="Node Library: gulp-pug" target="_blank" rel="noopener">gulp-pug</a></li><li><a href="https://www.npmjs.com/package/gulp-ejs" title="Node Library: gulp-ejs" target="_blank" rel="noopener">gulp-ejs</a></li><li><a href="https://www.npmjs.com/package/gulp-htmlmin" title="Node Library: gulp-htmlmin" target="_blank" rel="noopener">gulp-htmlmin</a></li><li><a href="https://www.npmjs.com/package/gulp-processhtml" title="Node Library: gulp-processhtml" target="_blank" rel="noopener">gulp-processhtml</a></li><li><a href="https://www.npmjs.com/package/gulp-typescript" title="Node Library: gulp-typescript" target="_blank" rel="noopener">gulp-typescript</a></li><li><a href="https://www.npmjs.com/package/gulp-coffee" title="Node Library: gulp-coffee" target="_blank" rel="noopener">gulp-coffee</a></li><li><a href="https://www.npmjs.com/package/gulp-coffeelint" title="Node Library: gulp-coffeelint" target="_blank" rel="noopener">gulp-coffeelint</a></li><li><a href="https://www.npmjs.com/package/gulp-ng-annotate" title="Node Library: gulp-ng-annotate" target="_blank" rel="noopener">gulp-ng-annotate</a></li><li><a href="https://www.npmjs.com/package/gulp-uglify" title="Node Library: gulp-uglify" target="_blank" rel="noopener">gulp-uglify</a></li><li><a href="https://www.npmjs.com/package/gulp-stylus" title="Node Library: gulp-stylus" target="_blank" rel="noopener">gulp-stylus</a></li><li><a href="https://www.npmjs.com/package/gulp-autoprefixer" title="Node Library: gulp-autoprefixer" target="_blank" rel="noopener">gulp-autoprefixer</a></li><li><a href="https://www.npmjs.com/package/gulp-csso" title="Node Library: gulp-csso" target="_blank" rel="noopener">gulp-csso</a></li><li><a href="https://www.npmjs.com/package/gulp-imagemin" title="Node Library: gulp-imagemin" target="_blank" rel="noopener">gulp-imagemin</a></li><li><a href="https://www.npmjs.com/package/gulp-cached" title="Node Library: gulp-cached" target="_blank" rel="noopener">gulp-cached</a></li><li><a href="https://www.npmjs.com/package/gulp-remember" title="Node Library: gulp-remember" target="_blank" rel="noopener">gulp-remember</a></li><li><a href="https://www.npmjs.com/package/gulp-clean" title="Node Library: gulp-clean" target="_blank" rel="noopener">gulp-clean</a></li><li><a href="https://www.npmjs.com/package/gulp-concat" title="Node Library: gulp-concat" target="_blank" rel="noopener">gulp-concat</a></li><li><a href="https://www.npmjs.com/package/gulp-exec" title="Node Library: gulp-exec" target="_blank" rel="noopener">gulp-exec</a></li><li><a href="https://www.npmjs.com/package/gulp-if" title="Node Library: gulp-if" target="_blank" rel="noopener">gulp-if</a></li><li><a href="https://www.npmjs.com/package/gulp-lintspaces" title="Node Library: gulp-lintspaces" target="_blank" rel="noopener">gulp-lintspaces</a></li><li><a href="https://www.npmjs.com/package/gulp-rename" title="Node Library: gulp-rename" target="_blank" rel="noopener">gulp-rename</a></li><li><a href="https://www.npmjs.com/package/gulp-replace" title="Node Library: gulp-replace" target="_blank" rel="noopener">gulp-replace</a></li><li><a href="https://www.npmjs.com/package/gulp-run-sequence" title="Node Library: gulp-run-sequence" target="_blank" rel="noopener">gulp-run-sequence</a></li><li><a href="https://www.npmjs.com/package/gulp-supervisor" title="Node Library: gulp-supervisor" target="_blank" rel="noopener">gulp-supervisor</a></li><li><a href="https://www.npmjs.com/package/gulp-tap" title="Node Library: gulp-tap" target="_blank" rel="noopener">gulp-tap</a></li><li><a href="https://www.npmjs.com/package/gulp-load-plugins" title="Node Library: gulp-load-plugins" target="_blank" rel="noopener">gulp-load-plugins</a></li><li><a href="https://www.npmjs.com/package/gulp-task-listing" title="Node Library: gulp-task-listing" target="_blank" rel="noopener">gulp-task-listing</a></li><li><a href="https://www.npmjs.com/package/gulp-karma" title="Node Library: gulp-karma" target="_blank" rel="noopener">gulp-karma</a></li><li><a href="https://www.npmjs.com/package/gulp-mocha" title="Node Library: gulp-mocha" target="_blank" rel="noopener">gulp-mocha</a></li></ul><h2 id="语言相关"><a href="#语言相关" class="headerlink" title="语言相关"></a>语言相关</h2><h3 id="CoffeeScript"><a href="#CoffeeScript" class="headerlink" title="CoffeeScript"></a>CoffeeScript</h3><ul><li><a href="https://www.npmjs.com/package/coffee-script" title="Node Library: coffee-script" target="_blank" rel="noopener">coffee-script</a></li><li><a href="https://www.npmjs.com/package/coffeelint" title="Node Library: coffeelint" target="_blank" rel="noopener">coffeelint</a></li></ul><h3 id="TypeScript"><a href="#TypeScript" class="headerlink" title="TypeScript"></a>TypeScript</h3><ul><li><a href="https://www.npmjs.com/package/typescript" title="Node Library: typescript" target="_blank" rel="noopener">typescript</a></li><li><a href="https://www.npmjs.com/package/ts-node" title="Node Library: ts-node" target="_blank" rel="noopener">ts-node</a></li><li><a href="https://www.npmjs.com/package/tsconfig-paths" title="Node Library: tsconfig-paths" target="_blank" rel="noopener">tsconfig-paths</a><br>当用的<code>TS</code>的<code>paths</code>功能时, 就需要它了</li><li><a href="https://www.npmjs.com/package/ts-mocha" title="Node Library: ts-mocha" target="_blank" rel="noopener">ts-mocha</a><br>如果用了<code>mocha</code>来测试, 并且测试文件用<code>Typescript</code>编写, 建议用这个框架</li><li><a href="https://www.npmjs.com/package/tshint" title="Node Library: tshint" target="_blank" rel="noopener">tshint</a></li></ul><h2 id="基础加强集合"><a href="#基础加强集合" class="headerlink" title="基础加强集合"></a>基础加强集合</h2><ul><li><a href="https://www.npmjs.com/package/glob" title="Node Library: glob" target="_blank" rel="noopener">glob</a></li><li><a href="https://www.npmjs.com/package/fs-extra" title="Node Library: fs-extra" target="_blank" rel="noopener">fs-extra</a></li><li><a href="https://www.npmjs.com/package/rimraf" title="Node Library: rimraf" target="_blank" rel="noopener">rimraf</a><br>平时用于<code>npm script</code>, 比系统提供的稳定</li><li><a href="https://www.npmjs.com/package/mkdirp" title="Node Library: mkdirp" target="_blank" rel="noopener">mkdirp</a><br><code>fs-extra</code>里面已经有这个功能了, 现在用于<code>npm script</code></li><li><a href="https://www.npmjs.com/package/targz" title="Node Library: targz" target="_blank" rel="noopener">targz</a><br>用来处理<code>.tar.gz</code>压缩包</li><li><a href="https://www.npmjs.com/package/config-yaml" title="Node Library: config-yaml" target="_blank" rel="noopener">config-yaml</a></li><li><a href="https://www.npmjs.com/package/yaml-config" title="Node Library: yaml-config" target="_blank" rel="noopener">yaml-config</a><br><code>config-yaml</code>和<code>yaml-config</code>的区别就是前者不需要根据环境变量, 就像平常<code>JSON.parse</code>一样, 后者就是多了一层环境变量的嵌套</li><li><a href="https://www.npmjs.com/package/once" title="Node Library: once" target="_blank" rel="noopener">once</a></li><li><a href="https://www.npmjs.com/package/bluebird" title="Node Library: bluebird" target="_blank" rel="noopener">bluebird</a></li><li>path-exists<br>因为<code>fs.exists</code>已经<a href="https://github.com/iojs/io.js/issues/103" target="_blank" rel="noopener">deprecated</a></li></ul><h2 id="工具集"><a href="#工具集" class="headerlink" title="工具集"></a>工具集</h2><ul><li><a href="https://www.npmjs.com/package/lodash" title="Node Library: lodash" target="_blank" rel="noopener">lodash</a></li><li><a href="https://www.npmjs.com/package/md5" title="Node Library: md5" target="_blank" rel="noopener">md5</a></li><li><a href="https://www.npmjs.com/package/md5-file" title="Node Library: md5-file" target="_blank" rel="noopener">md5-file</a><br>可以自己用<code>md5</code>改写</li><li><a href="https://www.npmjs.com/package/rxjs" title="Node Library: rxjs" target="_blank" rel="noopener">rxjs</a></li><li><a href="https://www.npmjs.com/package/y-config" title="Node Library: y-config" target="_blank" rel="noopener">y-config</a></li><li><a href="https://www.npmjs.com/package/node-schedule" title="Node Library: node-schedule" target="_blank" rel="noopener">node-schedule</a></li><li><a href="https://www.npmjs.com/package/schedule-cache" title="Node Library: schedule-cache" target="_blank" rel="noopener">schedule-cache</a><br>我用<code>node-schedule</code>弄了一个定时<code>Cache</code>库</li><li><a href="https://www.npmjs.com/package/validator" title="Node Library: validator" target="_blank" rel="noopener">validator</a><ul><li><a href="https://www.npmjs.com/package/class-validator" title="Node Library: class-validator" target="_blank" rel="noopener">class-validator</a></li></ul></li><li><a href="https://www.npmjs.com/package/moment" title="Node Library: moment" target="_blank" rel="noopener">moment</a></li><li><a href="https://www.npmjs.com/package/moment-timezone" title="Node Library: moment-timezone" target="_blank" rel="noopener">moment-timezone</a></li><li><a href="https://www.npmjs.com/package/ms" title="Node Library: ms" target="_blank" rel="noopener">ms</a><br>相关时间和毫秒互转</li><li><a href="https://www.npmjs.com/package/optional" title="Node Library: optional" target="_blank" rel="noopener">optional</a><br>其实就是一个自带<code>trycatch</code>的<code>require</code></li></ul><h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><ul><li><a href="https://www.npmjs.com/package/cross-env" title="Node Library: cross-env" target="_blank" rel="noopener">cross-env</a></li><li><a href="https://www.npmjs.com/package/nrm" title="Node Library: nrm" target="_blank" rel="noopener">nrm</a></li><li><a href="https://www.npmjs.com/package/nvm" title="Node Library: nvm" target="_blank" rel="noopener">nvm</a></li></ul><h2 id="服务器相关"><a href="#服务器相关" class="headerlink" title="服务器相关"></a>服务器相关</h2><ul><li>NestJS<ul><li><a href="https://www.npmjs.com/package/@nestjs/core" title="Node Library: @nestjs/core" target="_blank" rel="noopener">@nestjs/core</a></li><li><a href="https://www.npmjs.com/package/@nestjs/common" title="Node Library: @nestjs/common" target="_blank" rel="noopener">@nestjs/common</a></li><li><a href="https://www.npmjs.com/package/@nestjs/testing" title="Node Library: @nestjs/testing" target="_blank" rel="noopener">@nestjs/testing</a><br>测试<code>Nest</code>时需要它</li></ul></li><li><a href="https://www.npmjs.com/package/express" title="Node Library: express" target="_blank" rel="noopener">express</a><ul><li><a href="https://www.npmjs.com/package/express-session" title="Node Library: express-session" target="_blank" rel="noopener">express-session</a></li></ul></li><li><a href="https://www.npmjs.com/package/multer" title="Node Library: multer" target="_blank" rel="noopener">multer</a></li><li><a href="https://www.npmjs.com/package/body-parser" title="Node Library: body-parser" target="_blank" rel="noopener">body-parser</a></li><li><a href="https://www.npmjs.com/package/cors" title="Node Library: cors" target="_blank" rel="noopener">cors</a></li><li><a href="https://www.npmjs.com/package/cookie-parser" title="Node Library: cookie-parser" target="_blank" rel="noopener">cookie-parser</a></li><li><a href="https://www.npmjs.com/package/socket.io" title="Node Library: socket.io" target="_blank" rel="noopener">socket.io</a></li><li><a href="https://www.npmjs.com/package/nodemailer" title="Node Library: nodemailer" target="_blank" rel="noopener">nodemailer</a></li><li><a href="https://www.npmjs.com/package/http-proxy-middleware" title="Node Library: http-proxy-middleware" target="_blank" rel="noopener">http-proxy-middleware</a></li></ul><h2 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h2><ul><li><a href="https://www.npmjs.com/package/mongoose" title="Node Library: mongoose" target="_blank" rel="noopener">mongoose</a></li><li><a href="https://www.npmjs.com/package/lowdb" title="Node Library: lowdb" target="_blank" rel="noopener">lowdb</a></li></ul><h2 id="页面端相关"><a href="#页面端相关" class="headerlink" title="页面端相关"></a>页面端相关</h2><p>因为一直在angular圈打转，基本没用过vue和react，所以就没有它们的。</p><ul><li><a href="https://www.npmjs.com/package/jquery" title="Node Library: jquery" target="_blank" rel="noopener">jquery</a></li><li><a href="https://www.npmjs.com/package/bootstrap" title="Node Library: bootstrap" target="_blank" rel="noopener">bootstrap</a></li><li><a href="https://www.npmjs.com/package/fullpage.js" title="Node Library: fullpage.js" target="_blank" rel="noopener">fullpage.js</a></li></ul><h3 id="图表"><a href="#图表" class="headerlink" title="图表"></a>图表</h3><ul><li><a href="https://www.npmjs.com/package/echarts" title="Node Library: echarts" target="_blank" rel="noopener">echarts</a><br>百度的图表库</li><li><a href="https://www.npmjs.com/package/datavjs" title="Node Library: datavjs" target="_blank" rel="noopener">datavjs</a><br>淘宝的图表库</li><li><a href="https://www.npmjs.com/package/d3" title="Node Library: d3" target="_blank" rel="noopener">d3</a></li></ul><h3 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h3><ul><li><a href="https://www.npmjs.com/package/animate.css" title="Node Library: animate.css" target="_blank" rel="noopener">animate.css</a></li><li><a href="https://www.npmjs.com/package/theaterjs" title="Node Library: theaterjs" target="_blank" rel="noopener">theaterjs</a><br>很炫的输入动画库</li></ul><h3 id="AngularJS"><a href="#AngularJS" class="headerlink" title="AngularJS"></a>AngularJS</h3><ul><li><a href="https://www.npmjs.com/package/angular" title="Node Library: angular" target="_blank" rel="noopener">angular</a><ul><li><a href="https://www.npmjs.com/package/angular-animate" title="Node Library: angular-animate" target="_blank" rel="noopener">angular-animate</a></li><li><a href="https://www.npmjs.com/package/angular-messages" title="Node Library: angular-messages" target="_blank" rel="noopener">angular-messages</a></li><li><a href="https://www.npmjs.com/package/angular-route" title="Node Library: angular-route" target="_blank" rel="noopener">angular-route</a></li><li><a href="https://www.npmjs.com/package/angular-translate" title="Node Library: angular-translate" target="_blank" rel="noopener">angular-translate</a></li><li><a href="https://www.npmjs.com/package/angular-translate-loader-partial" title="Node Library: angular-translate-loader-partial" target="_blank" rel="noopener">angular-translate-loader-partial</a></li><li><a href="https://www.npmjs.com/package/angular-file-upload" title="Node Library: angular-file-upload" target="_blank" rel="noopener">angular-file-upload</a></li></ul></li></ul><h3 id="Angular"><a href="#Angular" class="headerlink" title="Angular"></a>Angular</h3><ul><li><a href="https://www.npmjs.com/package/ngx-echarts" title="Node Library: ngx-echarts" target="_blank" rel="noopener">ngx-echarts</a><br>背后是百度的<code>echarts</code></li><li><a href="https://www.npmjs.com/package/ng2-file-upload" title="Node Library: ng2-file-upload" target="_blank" rel="noopener">ng2-file-upload</a></li><li><a href="https://www.npmjs.com/package/ng-zorro-antd" title="Node Library: ng-zorro-antd" target="_blank" rel="noopener">ng-zorro-antd</a><br>蚂蚁的<code>UI</code>库, 不解释</li></ul><h2 id="客户端相关"><a href="#客户端相关" class="headerlink" title="客户端相关"></a>客户端相关</h2><ul><li><a href="https://www.npmjs.com/package/electron" title="Node Library: electron" target="_blank" rel="noopener">electron</a><ul><li><a href="https://www.npmjs.com/package/electron-builder" title="Node Library: electron-builder" target="_blank" rel="noopener">electron-builder</a></li><li><a href="https://www.npmjs.com/package/electron-packager" title="Node Library: electron-packager" target="_blank" rel="noopener">electron-packager</a></li></ul></li></ul><h2 id="命令行端相关"><a href="#命令行端相关" class="headerlink" title="命令行端相关"></a>命令行端相关</h2><ul><li><a href="https://www.npmjs.com/package/yargs" title="Node Library: yargs" target="_blank" rel="noopener">yargs</a><br>可以用它解析命令行参数</li><li><a href="https://www.npmjs.com/package/inquirer" title="Node Library: inquirer" target="_blank" rel="noopener">inquirer</a><br>写过<code>yo</code>的脚手架就知道这个提示是多好用</li><li><a href="https://www.npmjs.com/package/ora" title="Node Library: ora" target="_blank" rel="noopener">ora</a><br>进度显示, 非常方便</li><li><a href="https://www.npmjs.com/package/chalk" title="Node Library: chalk" target="_blank" rel="noopener">chalk</a></li><li><a href="https://www.npmjs.com/package/cliui" title="Node Library: cliui" target="_blank" rel="noopener">cliui</a></li><li><a href="https://www.npmjs.com/package/os-homedir" title="Node Library: os-homedir" target="_blank" rel="noopener">os-homedir</a><br>获取用户目录位置</li><li><a href="https://www.npmjs.com/package/get-stdin" title="Node Library: get-stdin" target="_blank" rel="noopener">get-stdin</a></li></ul><h2 id="测试相关"><a href="#测试相关" class="headerlink" title="测试相关"></a>测试相关</h2><ul><li><a href="https://www.npmjs.com/package/karma" title="Node Library: karma" target="_blank" rel="noopener">karma</a><br><code>AnuglarJS</code>测试用的<ul><li><a href="https://www.npmjs.com/package/karma-coffee-preprocessor" title="Node Library: karma-coffee-preprocessor" target="_blank" rel="noopener">karma-coffee-preprocessor</a></li><li><a href="https://www.npmjs.com/package/karma-ie-launcher" title="Node Library: karma-ie-launcher" target="_blank" rel="noopener">karma-ie-launcher</a></li><li><a href="https://www.npmjs.com/package/karma-firefox-launcher" title="Node Library: karma-firefox-launcher" target="_blank" rel="noopener">karma-firefox-launcher</a></li><li><a href="https://www.npmjs.com/package/karma-safari-launcher" title="Node Library: karma-safari-launcher" target="_blank" rel="noopener">karma-safari-launcher</a></li><li><a href="https://www.npmjs.com/package/karma-chrome-launcher" title="Node Library: karma-chrome-launcher" target="_blank" rel="noopener">karma-chrome-launcher</a></li><li><a href="https://www.npmjs.com/package/karma-phantomjs-launcher" title="Node Library: karma-phantomjs-launcher" target="_blank" rel="noopener">karma-phantomjs-launcher</a></li><li><a href="https://www.npmjs.com/package/karma-jasmine" title="Node Library: karma-jasmine" target="_blank" rel="noopener">karma-jasmine</a></li><li><a href="https://www.npmjs.com/package/karma-coverage" title="Node Library: karma-coverage" target="_blank" rel="noopener">karma-coverage</a></li><li><a href="https://www.npmjs.com/package/karma-junit-reporter" title="Node Library: karma-junit-reporter" target="_blank" rel="noopener">karma-junit-reporter</a></li><li><a href="https://www.npmjs.com/package/karma-story-reporter" title="Node Library: karma-story-reporter" target="_blank" rel="noopener">karma-story-reporter</a></li></ul></li><li><a href="https://www.npmjs.com/package/mocha" title="Node Library: mocha" target="_blank" rel="noopener">mocha</a><ul><li><a href="https://www.npmjs.com/package/mochawesome" title="Node Library: mochawesome" target="_blank" rel="noopener">mochawesome</a></li></ul></li><li><a href="https://www.npmjs.com/package/should" title="Node Library: should" target="_blank" rel="noopener">should</a></li><li><a href="https://www.npmjs.com/package/rewire" title="Node Library: rewire" target="_blank" rel="noopener">rewire</a><br>用于改写库的私有变量, 相当好用</li><li><a href="https://www.npmjs.com/package/faker" title="Node Library: faker" target="_blank" rel="noopener">faker</a><br>模拟数据用, 你懂的</li><li><a href="https://www.npmjs.com/package/nyc" title="Node Library: nyc" target="_blank" rel="noopener">nyc</a></li><li><a href="https://www.npmjs.com/package/istanbul" title="Node Library: istanbul" target="_blank" rel="noopener">istanbul</a></li><li><a href="https://www.npmjs.com/package/source-map-support" title="Node Library: source-map-support" target="_blank" rel="noopener">source-map-support</a></li><li><a href="https://www.npmjs.com/package/supertest" title="Node Library: supertest" target="_blank" rel="noopener">supertest</a></li><li><a href="https://www.npmjs.com/package/supertest-session" title="Node Library: supertest-session" target="_blank" rel="noopener">supertest-session</a><br>因为<code>supertest</code>不支持保存session</li><li><a href="https://www.npmjs.com/package/phantomjs-prebuilt" title="Node Library: phantomjs-prebuilt" target="_blank" rel="noopener">phantomjs-prebuilt</a></li><li><a href="https://www.npmjs.com/package/coveralls" title="Node Library: coveralls" target="_blank" rel="noopener">coveralls</a><br>会将测试报告上传到<code>coveralls.io</code>, 常用的写法是<code>cat ./coverage/lcov.info | coveralls</code></li><li><a href="https://www.npmjs.com/package/standard" title="Node Library: standard" target="_blank" rel="noopener">standard</a><br>统一处理<code>.js</code>格式问题</li><li><a href="https://www.npmjs.com/package/cheerio" title="Node Library: cheerio" target="_blank" rel="noopener">cheerio</a><br>性能优秀, 可以用来做<code>HTML</code>爬虫解析</li></ul><h2 id="调试相关"><a href="#调试相关" class="headerlink" title="调试相关"></a>调试相关</h2><ul><li><a href="https://www.npmjs.com/package/debug" title="Node Library: debug" target="_blank" rel="noopener">debug</a></li><li><a href="https://www.npmjs.com/package/browser-sync" title="Node Library: browser-sync" target="_blank" rel="noopener">browser-sync</a></li><li><a href="https://www.npmjs.com/package/connect-livereload" title="Node Library: connect-livereload" target="_blank" rel="noopener">connect-livereload</a><br>当年的F5解放组件, 但现在通过<code>socket</code>接收刷新信号来取代它取代了</li></ul><h2 id="运维相关"><a href="#运维相关" class="headerlink" title="运维相关"></a>运维相关</h2><ul><li><a href="https://www.npmjs.com/package/forever" title="Node Library: forever" target="_blank" rel="noopener">forever</a></li><li><a href="https://www.npmjs.com/package/pm2" title="Node Library: pm2" target="_blank" rel="noopener">pm2</a><br>自从有了<code>pm2</code>之后, 就没<code>forever</code>的事了</li></ul><h2 id="日志相关"><a href="#日志相关" class="headerlink" title="日志相关"></a>日志相关</h2><ul><li><a href="https://www.npmjs.com/package/log4js" title="Node Library: log4js" target="_blank" rel="noopener">log4js</a></li><li><a href="https://www.npmjs.com/package/bunyan" title="Node Library: bunyan" target="_blank" rel="noopener">bunyan</a></li><li><a href="https://www.npmjs.com/package/morgan" title="Node Library: morgan" target="_blank" rel="noopener">morgan</a></li></ul><h2 id="文档生成"><a href="#文档生成" class="headerlink" title="文档生成"></a>文档生成</h2><ul><li><a href="https://www.npmjs.com/package/apidoc" title="Node Library: apidoc" target="_blank" rel="noopener">apidoc</a></li></ul><h1 id="别人推荐或收集回来的"><a href="#别人推荐或收集回来的" class="headerlink" title="别人推荐或收集回来的"></a>别人推荐或收集回来的</h1><p>下面是别人推荐或者自己收集回来的, 暂时没有尝试过</p><h2 id="页面端相关-1"><a href="#页面端相关-1" class="headerlink" title="页面端相关"></a>页面端相关</h2><h3 id="Angular-1"><a href="#Angular-1" class="headerlink" title="Angular"></a>Angular</h3><ul><li><a href="https://www.npmjs.com/package/ng2-admin" title="Node Library: ng2-admin" target="_blank" rel="noopener">ng2-admin</a><ul><li><a href="https://github.com/ngx-admin" title="Github Resource: ngx-admin" target="_blank" rel="noopener">ngx-admin</a></li></ul></li></ul><h2 id="测试相关-1"><a href="#测试相关-1" class="headerlink" title="测试相关"></a>测试相关</h2><ul><li><a href="https://www.npmjs.com/package/randexp" title="Node Library: randexp" target="_blank" rel="noopener">randexp</a><br>根据<code>RegExp</code>规则生成随机字符串</li><li><a href="https://www.npmjs.com/package/jest" title="Node Library: jest" target="_blank" rel="noopener">jest</a></li><li><a href="https://www.npmjs.com/package/ava" title="Node Library: ava" target="_blank" rel="noopener">ava</a></li><li><a href="https://www.npmjs.com/package/tape" title="Node Library: tape" target="_blank" rel="noopener">tape</a></li><li><a href="https://www.npmjs.com/package/enzyme" title="Node Library: enzyme" target="_blank" rel="noopener">enzyme</a></li><li><a href="https://www.npmjs.com/package/mocha-steps" title="Node Library: mocha-steps" target="_blank" rel="noopener">mocha-steps</a></li></ul><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2017/12/10/javascript/npms/&quot;&gt;http://arylo.github.io/2017/12/10/javascript/npms/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 13分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;p&gt;从13年接触angular开始，就不断接触摸索各种node库，感叹前端圈的变化之大。下面本人将用过的，收集来的库整理出来，望有缘人需要它们&lt;/p&gt;
+&lt;h1 id=&quot;已经用过了的&quot;&gt;&lt;a href=&quot;#已经用过了的&quot; class=&quot;headerlink&quot; title=&quot;已经用过了的&quot;&gt;&lt;/a&gt;已经用过了的&lt;/h1&gt;&lt;h2 id=&quot;博客类&quot;&gt;&lt;a href=&quot;#博客类&quot; class=&quot;headerlink&quot; title=&quot;博客类&quot;&gt;&lt;/a&gt;博客类&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/hexo&quot; title=&quot;Node Library: hexo&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/hexo-admin&quot; title=&quot;Node Library: hexo-admin&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo-admin&lt;/a&gt;&lt;br&gt;这个插件背后是一个美好的爱情故事&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/hexo-deployer-git&quot; title=&quot;Node Library: hexo-deployer-git&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo-deployer-git&lt;/a&gt;&lt;br&gt;自从某个版本出问题之后, 我就用&lt;code&gt;Travis&lt;/code&gt;帮我发布&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/hexo-filter-cleanup&quot; title=&quot;Node Library: hexo-filter-cleanup&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;hexo-filter-
+    
+    </summary>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/categories/Javascript/"/>
+    
+    
+      <category term="Nodejs" scheme="http://arylo.github.io/tags/Nodejs/"/>
+    
+      <category term="TypeScript" scheme="http://arylo.github.io/tags/TypeScript/"/>
+    
+      <category term="CoffeeScript" scheme="http://arylo.github.io/tags/CoffeeScript/"/>
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="Grunt" scheme="http://arylo.github.io/tags/Grunt/"/>
+    
+      <category term="Npm" scheme="http://arylo.github.io/tags/Npm/"/>
+    
+      <category term="Node" scheme="http://arylo.github.io/tags/Node/"/>
+    
+      <category term="Angular" scheme="http://arylo.github.io/tags/Angular/"/>
+    
+      <category term="AngularJS" scheme="http://arylo.github.io/tags/AngularJS/"/>
+    
+      <category term="Express" scheme="http://arylo.github.io/tags/Express/"/>
+    
+      <category term="Macha" scheme="http://arylo.github.io/tags/Macha/"/>
+    
+      <category term="Karma" scheme="http://arylo.github.io/tags/Karma/"/>
+    
+      <category term="Hexo" scheme="http://arylo.github.io/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>流程化运行Typescript 项目</title>
+    <link href="http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/"/>
+    <id>http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/</id>
+    <published>2017-07-04T11:00:00.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/">http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/</a><br>大概需要阅读时间: 2分钟</p></blockquote><hr><h1 id="0-Introduction"><a href="#0-Introduction" class="headerlink" title="0 Introduction"></a>0 Introduction</h1><p>之前(<a href="/2017/06/07/javascript/debug_typescript_in_vscode/">链接</a>)说到, Nodejs 项目中, 开始用上Typescript. 在开发上非常流畅, 甚至在怀疑之前自己为什么不用它.</p><p>可这东西交到运维手上前, 发生了另外的事情.</p><h1 id="1-ts-node-坑"><a href="#1-ts-node-坑" class="headerlink" title="1 ts-node 坑"></a>1 ts-node 坑</h1><p>项目的开始, 就用上了<code>ts-node</code>, 当时用得挺好的, 可惜在开发调试上强差人意, 所以在开发环境下, 并没有使用, 而是经过<code>gulp</code>转换一下, 由于历时比较久, 所以到放在生产环境上出现各种问题, 基于项目急需上线的关系, 觉得暂时也经过<code>gulp</code>转一下就上线.</p><h1 id="2-Now"><a href="#2-Now" class="headerlink" title="2 Now"></a>2 Now</h1><p>首先要考虑的是构建<code>Docker Image</code>的问题, 因为要构建的原因, 所以流程和命令, 能简化得简化, 这样不论运维, 还是新进的<a id="more"></a>开发, 也能快速使用.</p><p>整理一下流程, 就是<code>Gulp  ===&gt;  Run</code>. 但由于文件已经写好了, <code>NODE_ENV=production</code>就使用<code>ts-node</code>. 必须在不影响源码的情况下解决这个问题, 最简单的是在<code>node .</code>前面加上<code>NODE_ENV=development</code>, 在跨平台下, window的同事是用不上这段命令的, 好在, 万能google 告诉我们, 用<code>cross-env</code>就行了.</p><h2 id="安装-cross-env"><a href="#安装-cross-env" class="headerlink" title="安装 cross-env"></a>安装 cross-env</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D cross-env</span><br></pre></td></tr></table></figure><h2 id="在package-json-追加命令"><a href="#在package-json-追加命令" class="headerlink" title="在package.json 追加命令"></a>在package.json 追加命令</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">"scripts": &#123;</span><br><span class="line">    "prestart": "./node_modules/.bin/gulp",</span><br><span class="line">    "start": "cross-env NODE_ENV=development node ."</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>一开始也奇怪, 一般来说, <code>cross-env</code>并非全局变量, 应该写成<code>./node_modules/.../cross-env</code>. 但按照这个情况, 那经过<code>--save-dev</code>or<code>-D</code>安装的node module, 在npm script里是直接在全局中, 那么将<code>prestart</code>改为<code>&quot;prestart&quot;: &quot;gulp&quot;</code>, 是否也能达成相同的效果呢?</p><p>答案是可行的.</p><h1 id="3-And"><a href="#3-And" class="headerlink" title="3 And"></a>3 And</h1><p>经过这次折腾, 留意到<code>-D</code>有着原本不知道的能力, 那前面的项目的测试命令, 是否应该都改为这个形式呢, 这个要看项目时间吧.</p><p>毕竟.</p><p>程序猿都是<code>懒惰</code>的.</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/&quot;&gt;http://arylo.github.io/2017/07/04/javascript/ts_run-tsproject/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 2分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;0-Introduction&quot;&gt;&lt;a href=&quot;#0-Introduction&quot; class=&quot;headerlink&quot; title=&quot;0 Introduction&quot;&gt;&lt;/a&gt;0 Introduction&lt;/h1&gt;&lt;p&gt;之前(&lt;a href=&quot;/2017/06/07/javascript/debug_typescript_in_vscode/&quot;&gt;链接&lt;/a&gt;)说到, Nodejs 项目中, 开始用上Typescript. 在开发上非常流畅, 甚至在怀疑之前自己为什么不用它.&lt;/p&gt;
+&lt;p&gt;可这东西交到运维手上前, 发生了另外的事情.&lt;/p&gt;
+&lt;h1 id=&quot;1-ts-node-坑&quot;&gt;&lt;a href=&quot;#1-ts-node-坑&quot; class=&quot;headerlink&quot; title=&quot;1 ts-node 坑&quot;&gt;&lt;/a&gt;1 ts-node 坑&lt;/h1&gt;&lt;p&gt;项目的开始, 就用上了&lt;code&gt;ts-node&lt;/code&gt;, 当时用得挺好的, 可惜在开发调试上强差人意, 所以在开发环境下, 并没有使用, 而是经过&lt;code&gt;gulp&lt;/code&gt;转换一下, 由于历时比较久, 所以到放在生产环境上出现各种问题, 基于项目急需上线的关系, 觉得暂时也经过&lt;code&gt;gulp&lt;/code&gt;转一下就上线.&lt;/p&gt;
+&lt;h1 id=&quot;2-Now&quot;&gt;&lt;a href=&quot;#2-Now&quot; class=&quot;headerlink&quot; title=&quot;2 Now&quot;&gt;&lt;/a&gt;2 Now&lt;/h1&gt;&lt;p&gt;首先要考虑的是构建&lt;code&gt;Docker Image&lt;/code&gt;的问题, 因为要构建的原因, 所以流程和命令, 能简化得简化, 这样不论运维, 还是新进的
+    
+    </summary>
+    
+    
+      <category term="Nodejs" scheme="http://arylo.github.io/tags/Nodejs/"/>
+    
+      <category term="TypeScript" scheme="http://arylo.github.io/tags/TypeScript/"/>
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在VS Code 上调试TypeScript</title>
+    <link href="http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/"/>
+    <id>http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/</id>
+    <published>2017-06-07T06:58:26.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/">http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/</a><br>大概需要阅读时间: 9分钟</p></blockquote><hr><h1 id="0-Introduction"><a href="#0-Introduction" class="headerlink" title="0 Introduction"></a>0 Introduction</h1><p>上一篇(<a href="/2017/06/05/javascript/js_auto_complete/">链接</a>)已经说到, 最近用上了Typescript, 也在不同的项目中加上它. 仔细想想, TS 真的特别适合用在Nodejs 的开发上, 所以就开始了Nodejs 项目的改造.</p><h1 id="1-Now"><a href="#1-Now" class="headerlink" title="1 Now"></a>1 Now</h1><p>现在TypeScript 的部署, 基本上就是将<code>src/</code>目录的<code>.ts</code>文件编译到<code>build/</code>上, 再运行<code>build/</code>上的文件.</p><p>感觉上这很累赘, 在开发环境上还好说, 但在生成环境上, 既要保证有相应的写入权限, 还要白白浪费位置(如果说编译完后在删除<code>src/</code>目录, 你当我没说上面的话). 加上之前是写<code>CoffeeScript</code>时有神器<code>require(&#39;coffee-script/register&#39;);</code>, 将<a id="more"></a><code>.coffee</code>文件编译成<code>.js</code>放到内存里面运行. 为了这个事情, 我G 了好几下, 发现TS 也有这种神器<a href="https://www.npmjs.com/package/ts-node" target="_blank" rel="noopener"><code>ts-node</code></a>, 用法也差不多.</p><h1 id="2-Found"><a href="#2-Found" class="headerlink" title="2 Found"></a>2 Found</h1><p>就在我为找到<code>ts-node</code>而高兴的时候, 发现一个问题, 就是断点. 在VS Code 上, 断点JS 文件很简单的事, 然而断点TS 文件, 却提示我<code>由于未找到生成的代码，已忽略断点(是否是源映射问题?)</code>. 这个容易, 直接复制G 一下就知道解决办法, 肯定也有人遇上这问题.</p><p>然而, 并没有.</p><p>喵? 是大家不需要这功能还是只是我的设置有问题? 不对不对, 肯定有人也和我一样的, 难道是新版本有了中文, 以前是英文, 所以大家搜的是英文? 嗯, 那试试看.</p><p>搜了一下, 找到这一报错信息的英文原版<code>Breakpoint Ignored Because Generated Code Not Found</code>, 突然觉得翻译这句话的人, 友好度MAX, 直接就提示咱们天朝人是<strong>源映射问题</strong>!!</p><p>很多歪果仁遇上这个问题, 不是调试TS 时遇上的, 而是做ES6 -&gt; ES5 时遇上的, 嗯, 方法通用就好了.</p><h1 id="3-Resolve"><a href="#3-Resolve" class="headerlink" title="3 Resolve"></a>3 Resolve</h1><p>下面是解决时间</p><h2 id="Before"><a href="#Before" class="headerlink" title="Before"></a>Before</h2><p>先看看目录结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/</span><br><span class="line">  |- build/</span><br><span class="line">  |  |- index.js</span><br><span class="line">  |  |- ...</span><br><span class="line">  |</span><br><span class="line">  |- src/</span><br><span class="line">  |  |- index.ts</span><br><span class="line">  |  |- ...</span><br><span class="line">  |</span><br><span class="line">  |- index.js</span><br><span class="line">  |- package.json</span><br></pre></td></tr></table></figure></p><p>首先是TS 的编译, 这里我用<code>Gulp</code>代替<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gulpfile.js</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">gulp.task(<span class="string">'build'</span>, [..., <span class="string">'build:ts'</span>]);</span><br><span class="line">gulp.task(<span class="string">'build:ts'</span>, () =&gt; &#123;</span><br><span class="line">    gulp.src(<span class="string">'src/**/*.ts'</span>)</span><br><span class="line">        .pipe($.sourcemaps.init())</span><br><span class="line">        .pipe($.typescript())</span><br><span class="line">        .pipe($.sourcemaps.write(<span class="string">'.'</span>, &#123;</span><br><span class="line">            sourceRoot: <span class="function">(<span class="params">file</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;file.cwd&#125;</span>/src`</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;))</span><br><span class="line">        .pipe(gulp.dest(<span class="string">'build/'</span>));</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure></p><p>注意了, 这里的<code>sourceRoot</code>一定要设置, 否则定位不回源文件的.</p><p>添加一个<code>VS Code</code>的Task 来触发它.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .vscode/task.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"version"</span>: <span class="string">"0.1.0"</span>,</span><br><span class="line">    <span class="string">"command"</span>: <span class="string">"gulp"</span>,</span><br><span class="line">    <span class="string">"isShellCommand"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"args"</span>: [</span><br><span class="line">        <span class="string">"--no-color"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"tasks"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"taskName"</span>: <span class="string">"build"</span>,</span><br><span class="line">            <span class="string">"args"</span>: [],</span><br><span class="line">            <span class="string">"isBuildCommand"</span>: <span class="literal">true</span>,</span><br><span class="line">            <span class="string">"problemMatcher"</span>: [</span><br><span class="line">                <span class="string">"$tsc"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>然后就是关键的<code>launch.json</code>了<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .vscode/task.json</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"node"</span>,</span><br><span class="line">    <span class="string">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"启动程序"</span>,</span><br><span class="line">    <span class="string">"program"</span>: <span class="string">"$&#123;workspaceRoot&#125;/index.js"</span>,</span><br><span class="line">    <span class="string">"env"</span>: &#123;</span><br><span class="line">        <span class="string">"NODE_ENV"</span>: <span class="string">"development"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"preLaunchTask"</span>: <span class="string">"build"</span>,</span><br><span class="line">    <span class="string">"sourceMaps"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"outFiles"</span>: [</span><br><span class="line">        <span class="string">"$&#123;workspaceRoot&#125;/build/**/*.js"</span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>这里就没什么好解释了, <code>preLaunchTask</code>是对应<code>tasks.json</code>的<code>taskName</code>, “sourceMaps”是使用<code>.map</code>文件, “outFiles”是输出文件的位置, 就是上面的Gulp 的输出位置.</p><p>不过旧版的VS Code 是支持<code>outDir</code>的, 现在新版已经遗弃了它, 用了<code>outFiles</code>去代替它.</p><h2 id="After"><a href="#After" class="headerlink" title="After"></a>After</h2><p>好了, 现在的目录结构是这样子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/</span><br><span class="line">  |- .vscode/</span><br><span class="line">  |  |- launch.json</span><br><span class="line">  |  |- tasks.json</span><br><span class="line">  |</span><br><span class="line">  |- build/</span><br><span class="line">  |  |- index.js</span><br><span class="line">  |  |- index.js.map</span><br><span class="line">  |  |- ...</span><br><span class="line">  |</span><br><span class="line">  |- src/</span><br><span class="line">  |  |- index.ts</span><br><span class="line">  |  |- ...</span><br><span class="line">  |</span><br><span class="line">  |- index.js</span><br><span class="line">  |- gulpfile.js</span><br><span class="line">  |- package.json</span><br></pre></td></tr></table></figure></p><p>现在就可以尽情在<code>.ts</code>文件中使用断点了.</p><h1 id="4-End"><a href="#4-End" class="headerlink" title="4 End"></a>4 End</h1><blockquote><p>Q: 为什么要Gulp 来编译TS?</p><p>A: 其实在编译机不固定的时候, 不是每台的环境都含有<code>tsc</code>命令, 但<code>node</code>命令是必定存在的, 所以直接用了Gulp. 而且在部署的时候, 少装一个软件, 不是更加好吗?</p></blockquote><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/&quot;&gt;http://arylo.github.io/2017/06/07/javascript/debug_typescript_in_vscode/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 9分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;0-Introduction&quot;&gt;&lt;a href=&quot;#0-Introduction&quot; class=&quot;headerlink&quot; title=&quot;0 Introduction&quot;&gt;&lt;/a&gt;0 Introduction&lt;/h1&gt;&lt;p&gt;上一篇(&lt;a href=&quot;/2017/06/05/javascript/js_auto_complete/&quot;&gt;链接&lt;/a&gt;)已经说到, 最近用上了Typescript, 也在不同的项目中加上它. 仔细想想, TS 真的特别适合用在Nodejs 的开发上, 所以就开始了Nodejs 项目的改造.&lt;/p&gt;
+&lt;h1 id=&quot;1-Now&quot;&gt;&lt;a href=&quot;#1-Now&quot; class=&quot;headerlink&quot; title=&quot;1 Now&quot;&gt;&lt;/a&gt;1 Now&lt;/h1&gt;&lt;p&gt;现在TypeScript 的部署, 基本上就是将&lt;code&gt;src/&lt;/code&gt;目录的&lt;code&gt;.ts&lt;/code&gt;文件编译到&lt;code&gt;build/&lt;/code&gt;上, 再运行&lt;code&gt;build/&lt;/code&gt;上的文件.&lt;/p&gt;
+&lt;p&gt;感觉上这很累赘, 在开发环境上还好说, 但在生成环境上, 既要保证有相应的写入权限, 还要白白浪费位置(如果说编译完后在删除&lt;code&gt;src/&lt;/code&gt;目录, 你当我没说上面的话). 加上之前是写&lt;code&gt;CoffeeScript&lt;/code&gt;时有神器&lt;code&gt;require(&amp;#39;coffee-script/register&amp;#39;);&lt;/code&gt;, 将
+    
+    </summary>
+    
+    
+      <category term="Nodejs" scheme="http://arylo.github.io/tags/Nodejs/"/>
+    
+      <category term="TypeScript" scheme="http://arylo.github.io/tags/TypeScript/"/>
+    
+      <category term="CoffeeScript" scheme="http://arylo.github.io/tags/CoffeeScript/"/>
+    
+      <category term="VS Code" scheme="http://arylo.github.io/tags/VS-Code/"/>
+    
+      <category term="Debug" scheme="http://arylo.github.io/tags/Debug/"/>
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Breakpoint Ignored Because Generated Code Not Found" scheme="http://arylo.github.io/tags/Breakpoint-Ignored-Because-Generated-Code-Not-Found/"/>
+    
+      <category term="由于未找到生成的代码，已忽略断点(是否是源映射问题?)" scheme="http://arylo.github.io/tags/%E7%94%B1%E4%BA%8E%E6%9C%AA%E6%89%BE%E5%88%B0%E7%94%9F%E6%88%90%E7%9A%84%E4%BB%A3%E7%A0%81%EF%BC%8C%E5%B7%B2%E5%BF%BD%E7%95%A5%E6%96%AD%E7%82%B9-%E6%98%AF%E5%90%A6%E6%98%AF%E6%BA%90%E6%98%A0%E5%B0%84%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>让旧JS 文件也支持TS 智能提示</title>
+    <link href="http://arylo.github.io/2017/06/05/javascript/js_auto_complete/"/>
+    <id>http://arylo.github.io/2017/06/05/javascript/js_auto_complete/</id>
+    <published>2017-06-05T14:17:26.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2017/06/05/javascript/js_auto_complete/">http://arylo.github.io/2017/06/05/javascript/js_auto_complete/</a><br>大概需要阅读时间: 5分钟</p></blockquote><hr><h1 id="0"><a href="#0" class="headerlink" title="0"></a>0</h1><p>最近用上<code>Typescript</code>, 顺势用上了VS Code. 鉴于TS的智能提示实在太好用了, 所以就开始思考怎样将这个功能引入到日常的维护及开发中.</p><h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>为什么要先拿Newifi 开刀呢? 因为最近在弄Newifi OS4 的兼容和适配.</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><p>然而试验并不是很成功. 一开始考虑是按照常规js 转ts 的方式, 但并不可行, 一个是因为是试验, 一个是因为js 的混肴压缩是写在Makefile 文件, 在编译机不能为了这个去专门去加一个脚本作转换.</p><p>后来想想, 什么都不改不就好了嘛, 就得出现在的方案. 不过百度(X歌)一番之后, 发现做的人不多, 其实也是很正常的事. 现在的用上ts 的工程基本都是<code>源码 =&gt; 编译构建(gulp/webpack) =&gt; 运行</code>, 但我们是<code>源码 =&gt; 打包(makefile)</code>, 加之makefile 是由编译Newifi OS 时触发的<a id="more"></a>, 更加难以控制.</p><h1 id="3"><a href="#3" class="headerlink" title="3"></a>3</h1><p>现在Newifi 使用的是旧jQuery 的继承形式, 用<code>Class.extend({...})</code></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明</span></span><br><span class="line"><span class="comment">// api.js</span></span><br><span class="line">Class.extend(&#123;</span><br><span class="line">  setWanProto: <span class="function"><span class="keyword">function</span> (<span class="params">proto</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// proto 可以使用的是'pppoe', 'dhcp', 'static'</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line"><span class="comment">// newifi.js</span></span><br><span class="line">newifi.api.getWanProto(<span class="string">'pppoe'</span>);</span><br></pre></td></tr></table></figure><p>根据<a href="http://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html" target="_blank" rel="noopener">官方样例</a>, 我们将文件写成:</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// api.d.ts</span></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> newifi &#123;</span><br><span class="line">  <span class="keyword">export</span> <span class="keyword">interface</span> api &#123;</span><br><span class="line">    getWanProto(proto: <span class="built_in">string</span>): <span class="built_in">Promise</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>但在<code>newifi.js</code>里输入<code>newifi.</code>后, 没有提示api. 嗯? 这是怎么回事呢? 啊, 可能我少了那<code>///</code>, 好吧, 我补回来.</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// &lt;reference types="./api.d.ts" /&gt;</span></span><br></pre></td></tr></table></figure><p>这样总得可以了吧, 好吧试一下, <code>newifi.</code>, 嗯, 非常好, 有提示<code>api</code>, 好, 回车.</p><p>擦? 文件头部竟然<strong>自动出现</strong><code>var api = require(&#39;./api&#39;)</code>, 哥, 你还好吗? 我这个项目都是es5, 你require 干什么呢!</p><p>难道?</p><p>其实VS Code是不支持的?</p><h1 id="4"><a href="#4" class="headerlink" title="4"></a>4</h1><p>非也非也, 一脸茫然之后, 我将我自己的模块添加了<code>.d.ts</code>(<a href="https://github.com/Arylo/y-config/blob/29827b8a23feac26d69cf8239b6c186132517d31/index.d.ts" target="_blank" rel="noopener">文件地址</a>), 然后在js 文件下, 可以正常弹出提示, 难道之前哪里错了?</p><p>可能是真的错了, 写JS 久了就把原本的知识扔掉了, 刚好翻了<code>Kotlin</code>的文档, 看回interface, 发觉, 我为什么要用interface 呢? 这不是多余操作吗? 直接上namespace 不久好了嘛! 嗯嗯, 的确, 我将interface 改成namespace 后就可以正常提示了, 估计一开始就写js 的人(泛指<strong>大部分</strong>培训班出来的), 完全不明这个什么和什么. interface 在<code>OO</code>中太普遍了, 但在JS中却是稀有物种.</p><h1 id="5-完整写法"><a href="#5-完整写法" class="headerlink" title="5 完整写法"></a>5 完整写法</h1><p>整合namespace, 和使用type aliase 后:</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// api.js</span></span><br><span class="line">Class.extend(&#123;</span><br><span class="line">  setWanProto: <span class="function"><span class="keyword">function</span> (<span class="params">proto</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// proto 可以使用的是'pppoe', 'dhcp', 'static'</span></span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// api.d.ts</span></span><br><span class="line"><span class="keyword">type</span> ProtoValue = <span class="string">'pppoe'</span> | <span class="string">'dhcp'</span> | <span class="string">'static'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> newifi.api &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getWanProto</span>(<span class="params">proto: ProtoValue</span>): <span class="title">Promise</span></span>;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2017/06/05/javascript/js_auto_complete/&quot;&gt;http://arylo.github.io/2017/06/05/javascript/js_auto_complete/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 5分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;0&quot;&gt;&lt;a href=&quot;#0&quot; class=&quot;headerlink&quot; title=&quot;0&quot;&gt;&lt;/a&gt;0&lt;/h1&gt;&lt;p&gt;最近用上&lt;code&gt;Typescript&lt;/code&gt;, 顺势用上了VS Code. 鉴于TS的智能提示实在太好用了, 所以就开始思考怎样将这个功能引入到日常的维护及开发中.&lt;/p&gt;
+&lt;h1 id=&quot;1&quot;&gt;&lt;a href=&quot;#1&quot; class=&quot;headerlink&quot; title=&quot;1&quot;&gt;&lt;/a&gt;1&lt;/h1&gt;&lt;p&gt;为什么要先拿Newifi 开刀呢? 因为最近在弄Newifi OS4 的兼容和适配.&lt;/p&gt;
+&lt;h1 id=&quot;2&quot;&gt;&lt;a href=&quot;#2&quot; class=&quot;headerlink&quot; title=&quot;2&quot;&gt;&lt;/a&gt;2&lt;/h1&gt;&lt;p&gt;然而试验并不是很成功. 一开始考虑是按照常规js 转ts 的方式, 但并不可行, 一个是因为是试验, 一个是因为js 的混肴压缩是写在Makefile 文件, 在编译机不能为了这个去专门去加一个脚本作转换.&lt;/p&gt;
+&lt;p&gt;后来想想, 什么都不改不就好了嘛, 就得出现在的方案. 不过百度(X歌)一番之后, 发现做的人不多, 其实也是很正常的事. 现在的用上ts 的工程基本都是&lt;code&gt;源码 =&amp;gt; 编译构建(gulp/webpack) =&amp;gt; 运行&lt;/code&gt;, 但我们是&lt;code&gt;源码 =&amp;gt; 打包(makefile)&lt;/code&gt;, 加之makefile 是由编译Newifi OS 时触发的
+    
+    </summary>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="VS Code" scheme="http://arylo.github.io/tags/VS-Code/"/>
+    
+      <category term="Typescript" scheme="http://arylo.github.io/tags/Typescript/"/>
+    
+      <category term="Smart Complete" scheme="http://arylo.github.io/tags/Smart-Complete/"/>
+    
+      <category term="智能提示" scheme="http://arylo.github.io/tags/%E6%99%BA%E8%83%BD%E6%8F%90%E7%A4%BA/"/>
+    
+      <category term="jQuery" scheme="http://arylo.github.io/tags/jQuery/"/>
+    
+      <category term="Newifi" scheme="http://arylo.github.io/tags/Newifi/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Gulp游记]gulp-tap</title>
+    <link href="http://arylo.github.io/2016/06/28/javascript/gulp-tap/"/>
+    <id>http://arylo.github.io/2016/06/28/javascript/gulp-tap/</id>
+    <published>2016-06-28T01:43:19.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>&gt; 本文链接：<a href="http://arylo.github.io/2016/06/28/javascript/gulp-tap/">http://arylo.github.io/2016/06/28/javascript/gulp-tap/</a><br>&gt; 大概需要阅读时间: 3分钟<br><br>—<br><br># gulp-tap<br><br>这个我不知道应该怎样说, 感觉平常的用法也不是什么正确用法…<br><br>## 用途一 debug<br><br>可以知道正在使用哪个文件, 平常最常用就是这个了.<br>因为不清楚有什么<code>file</code>通过了<code>gulp.src</code>, 用这个方法就一下子显示出来了<br><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gulp.src(<span class="string">"**"</span>)</span><br><span class="line">    .pipe(gulpTap(<span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(file.path);</span><br><span class="line">    &#125;));</span><br></pre></td></tr></table></figure><h2 id="用途二-内容再分组"><a href="#用途二-内容再分组" class="headerlink" title="用途二 内容再分组"></a>用途二 内容再分组</h2><p>正在做的那个项目, 有很多的插件, 但格式都是统一的, 所以这个插件就可以更新一个<code>cwd</code>, 完成再分组.<br>一般我们都知道, 当进入通过<code>gulp.src</code>之后, <code>cwd</code>就不能再修改了, 但用了这个方法之后, 可以分别独立一个<code>cwd</code>, 不知这样好不好, 反正我觉得效果还行.</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * - src/plugins</span></span><br><span class="line"><span class="comment"> *   - plugin-0</span></span><br><span class="line"><span class="comment"> *   - plugin-1</span></span><br><span class="line"><span class="comment"> *   - plugin-2</span></span><br><span class="line"><span class="comment"> *   - …</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">gulp.src(<span class="string">"src/plugins/*"</span>)</span><br><span class="line">    .pipe(gulpTap(<span class="function"><span class="keyword">function</span>(<span class="params">file</span>) </span>&#123;</span><br><span class="line">        gulp.src(file.path + <span class="string">'/css/*'</span>)</span><br><span class="line">            .pipe(…)</span><br><span class="line">    &#125;));</span><br></pre></td></tr></table></figure><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&amp;gt; 本文链接：&lt;a href=&quot;http://arylo.github.io/2016/06/28/javascript/gulp-tap/&quot;&gt;http://arylo.github.io/2016/06/28/javascript/gul
+      
+    
+    </summary>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/categories/Javascript/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="Gulp游记" scheme="http://arylo.github.io/tags/Gulp%E6%B8%B8%E8%AE%B0/"/>
+    
+      <category term="学习笔记" scheme="http://arylo.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Automatically answer defaults when update config file</title>
+    <link href="http://arylo.github.io/2016/05/06/server/Automatically-answer-defaults-when-update-config-file/"/>
+    <id>http://arylo.github.io/2016/05/06/server/Automatically-answer-defaults-when-update-config-file/</id>
+    <published>2016-05-06T18:25:18.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>&gt; 本文链接：<a href="http://arylo.github.io/2016/05/06/server/Automatically-answer-defaults-when-update-config-file/">http://arylo.github.io/2016/05/06/server/Automatically-answer-defaults-when-update-config-file/</a><br>&gt; 大概需要阅读时间: 2分钟<br><br>—<br><br># 0<br><br>最近在弄持续构建的东西, 其中一项就是我们<code>PadroaBox</code>的编译. 但随着开发的推进, Config 文件一直在变, 导致各种警告, 例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WARNING: No feed for package &apos;python-readline&apos; found, maybe it&apos;s already part of the standard packages?</span><br><span class="line">WARNING: No feed for package &apos;python-mini&apos; found, maybe it&apos;s already part of the standard packages?</span><br></pre></td></tr></table></figure><p>或者最常见的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WARNING: your configuration is out of sync. Please run make menuconfig, oldconfig or defconfig!</span><br></pre></td></tr></table></figure></p><h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>是的, 对这个挺头疼的, 因为是自动运行的, 不能想平常那样进入<code>make menuconfig</code>后<code>Ctrl+C</code>出来, G了一下, 更新Config 文件有三种方法:</p><ul><li><code>make config</code></li><li><code>make menuconfig</code></li><li><code>make oldconfig</code></li></ul><h2 id="make-config"><a href="#make-config" class="headerlink" title="make config"></a><code>make config</code></h2><p>这个其实是<code>make menuconfig</code>的文字版, 没什么区别</p><h2 id="make-menuconfig"><a href="#make-menuconfig" class="headerlink" title="make menuconfig"></a><code>make menuconfig</code></h2><p>这个就不说了, 常用常见</p><h2 id="make-oldconfig"><a href="#make-oldconfig" class="headerlink" title="make oldconfig"></a><code>make oldconfig</code></h2><p>这个没接触过, 貌似和我想要的功能差不多, 但需要不断的回车</p><p>回车?</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><p>需要回车的话, 可以用<code>yes</code>命令, </p><p>不过注意的是, 不能这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yes | make oldconfig</span><br></pre></td></tr></table></figure></p><p>这样不断的空输入, 所以不行,<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yes y| make oldconfig</span><br><span class="line">yes n| make oldconfig</span><br></pre></td></tr></table></figure></p><p>Y和N 都不是好选择, 因为New的item不知道是不配置所需要, 然后我这样, 重复输入一个空字符串, 这样就会不断附带一个回车, 这样符合需要了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yes &quot;&quot;| make oldconfig</span><br></pre></td></tr></table></figure></p><h1 id="4"><a href="#4" class="headerlink" title="4"></a>4</h1><p><strong>4?</strong></p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&amp;gt; 本文链接：&lt;a href=&quot;http://arylo.github.io/2016/05/06/server/Automatically-answer-defaults-when-update-config-file/&quot;&gt;http://
+      
+    
+    </summary>
+    
+      <category term="Server" scheme="http://arylo.github.io/categories/Server/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="PandoraBox" scheme="http://arylo.github.io/tags/PandoraBox/"/>
+    
+      <category term="OpenWrt" scheme="http://arylo.github.io/tags/OpenWrt/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mac 下批量解压RAR</title>
+    <link href="http://arylo.github.io/2016/03/27/other/command_unrar-much-files/"/>
+    <id>http://arylo.github.io/2016/03/27/other/command_unrar-much-files/</id>
+    <published>2016-03-27T22:35:03.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2016/03/27/other/command_unrar-much-files/">http://arylo.github.io/2016/03/27/other/command_unrar-much-files/</a></p></blockquote><hr><h1 id="0"><a href="#0" class="headerlink" title="0"></a>0</h1><p>之前下了不少漫画, 不过都是<code>.rar</code>文件, 而且<code>Keka</code>解压不了他们, 无奈之下, 使用了大杀器<code>unrar</code>, 然而unrar不支持批量解压…<br>好吧, 既然不支持, 我写一个脚本去循环处理他们总得行了吧?</p><h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>脚本写好了, 可以解压多个RAR了, 但每次只能解压几个, 如果要解压这么多文件(60+), 无用功太多, 加上程序猿的&lt;惰性&gt;, 我还是不干了.</p><h1 id="3"><a href="#3" class="headerlink" title="3"></a>3</h1><p>为什么是3呢?</p><p>其实解压不是问题, 问题是以后也遇上这个问题怎么办呢?</p><p>甘好我在伯乐在线看到<a href="http://blog.jobbole.com/99063/" target="_blank" rel="noopener">这篇文章</a>, 安利一下, 用上了<code>find</code>的<code>exec</code><a id="more"></a></p><p>最后这样写就可以批量来弄了.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -type f -name "*.rar" -exec unrar x -p扶她奶茶 -u &#123;&#125; \;</span><br></pre></td></tr></table></figure></p><h2 id="3-Fail"><a href="#3-Fail" class="headerlink" title="3-Fail"></a>3-Fail</h2><p>如果遇上<code>no terminating &quot;;&quot; or &quot;+&quot;</code>, 那就重新看一下我行命令最后面的转移符吧~</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2016/03/27/other/command_unrar-much-files/&quot;&gt;http://arylo.github.io/2016/03/27/other/command_unrar-much-files/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;0&quot;&gt;&lt;a href=&quot;#0&quot; class=&quot;headerlink&quot; title=&quot;0&quot;&gt;&lt;/a&gt;0&lt;/h1&gt;&lt;p&gt;之前下了不少漫画, 不过都是&lt;code&gt;.rar&lt;/code&gt;文件, 而且&lt;code&gt;Keka&lt;/code&gt;解压不了他们, 无奈之下, 使用了大杀器&lt;code&gt;unrar&lt;/code&gt;, 然而unrar不支持批量解压…&lt;br&gt;好吧, 既然不支持, 我写一个脚本去循环处理他们总得行了吧?&lt;/p&gt;
+&lt;h1 id=&quot;1&quot;&gt;&lt;a href=&quot;#1&quot; class=&quot;headerlink&quot; title=&quot;1&quot;&gt;&lt;/a&gt;1&lt;/h1&gt;&lt;p&gt;脚本写好了, 可以解压多个RAR了, 但每次只能解压几个, 如果要解压这么多文件(60+), 无用功太多, 加上程序猿的&amp;lt;惰性&amp;gt;, 我还是不干了.&lt;/p&gt;
+&lt;h1 id=&quot;3&quot;&gt;&lt;a href=&quot;#3&quot; class=&quot;headerlink&quot; title=&quot;3&quot;&gt;&lt;/a&gt;3&lt;/h1&gt;&lt;p&gt;为什么是3呢?&lt;/p&gt;
+&lt;p&gt;其实解压不是问题, 问题是以后也遇上这个问题怎么办呢?&lt;/p&gt;
+&lt;p&gt;甘好我在伯乐在线看到&lt;a href=&quot;http://blog.jobbole.com/99063/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;这篇文章&lt;/a&gt;, 安利一下, 用上了&lt;code&gt;find&lt;/code&gt;的&lt;code&gt;exec&lt;/code&gt;
+    
+    </summary>
+    
+      <category term="经验" scheme="http://arylo.github.io/categories/%E7%BB%8F%E9%AA%8C/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="Command" scheme="http://arylo.github.io/tags/Command/"/>
+    
+      <category term="MAC" scheme="http://arylo.github.io/tags/MAC/"/>
+    
+      <category term="OSX" scheme="http://arylo.github.io/tags/OSX/"/>
+    
+      <category term="unrar" scheme="http://arylo.github.io/tags/unrar/"/>
+    
+      <category term="批量" scheme="http://arylo.github.io/tags/%E6%89%B9%E9%87%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>About Mhxy梦幻西游2 MAC版下载补丁失败解决办法</title>
+    <link href="http://arylo.github.io/2016/02/22/other/game_xyq-download-patch-fail/"/>
+    <id>http://arylo.github.io/2016/02/22/other/game_xyq-download-patch-fail/</id>
+    <published>2016-02-22T22:19:42.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>&gt; 本文链接：<a href="http://arylo.github.io/2016/02/22/other/game_xyq-download-patch-fail/">http://arylo.github.io/2016/02/22/other/game_xyq-download-patch-fail/</a><br><br>—<br><br>&gt; 以下都是MAC版的问题<br><br># 平台补丁下载失败<br><br>一句必胜<code>用手机热点再运行一次吧~</code><br><br># 卸载<br><br>本体位置   : <code>/Users/&lt;User&gt;/Library/Application Support/MhxyForMac</code><br>启动器位置 : <code>/Applications/梦幻西游启动器.app</code><br><br>E.g<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /Users/arylo/Library/Application\ Support/MhxyForMac</span><br><span class="line">sudo rm -rf /Applications/梦幻西游启动器.app</span><br></pre></td></tr></table></figure><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&amp;gt; 本文链接：&lt;a href=&quot;http://arylo.github.io/2016/02/22/other/game_xyq-download-patch-fail/&quot;&gt;http://arylo.github.io/2016/02/22
+      
+    
+    </summary>
+    
+      <category term="普通事" scheme="http://arylo.github.io/categories/%E6%99%AE%E9%80%9A%E4%BA%8B/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="163" scheme="http://arylo.github.io/tags/163/"/>
+    
+      <category term="梦幻" scheme="http://arylo.github.io/tags/%E6%A2%A6%E5%B9%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>API 测试</title>
+    <link href="http://arylo.github.io/2016/01/06/luci/pb-api-test/"/>
+    <id>http://arylo.github.io/2016/01/06/luci/pb-api-test/</id>
+    <published>2016-01-06T00:29:24.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2016/01/06/luci/pb-api-test/">http://arylo.github.io/2016/01/06/luci/pb-api-test/</a><br>大概需要阅读时间: 4分钟</p></blockquote><hr><h1 id="Front"><a href="#Front" class="headerlink" title="Front"></a>Front</h1><p>最近<code>Lafite Theme</code>往<code>1.0.0</code>走去, 测试变得非常频繁, 更新一次, 基本都要重新测试, 虽然之前写了不少测试单元(用<code>Phantom</code>, 但因为各种各样的原因, 大部分的Unit都需要修改, 甚至完全失效. 关于这个, Kerwin基本崩溃状态, 之前不少Unit是他写的, 现在不行了, 重构的也是他…</p><h2 id="And"><a href="#And" class="headerlink" title="And"></a>And</h2><p>还是那句, 触一发动全身. 接口这里的测试很多问题, 最大的问题是, 用原生Nodejs写的, 我自己做的轮子, 现在过了段时间, 反而不知道轮子怎样, 也促使我这次重构TestUnit之路.    </p><h1 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h1><h2 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h2><p>鉴于之前是我自己做的轮子, 所以这次直接寻找成熟的插件来做这个事情. 在Theme 那边, Kerwin 用的是Karma+Jasmine(虽然是我安利的…, 经常漫长的狗哥(&gt;30min), 最后选择了Mocha+Sho<a id="more"></a>uld+Supertest.</p><h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><ul><li><a href="http://mochajs.org" target="_blank" rel="noopener">Mocha</a></li><li><a href="https://www.npmjs.com/package/should" target="_blank" rel="noopener">Should</a></li><li><a href="https://www.npmjs.com/package/supertest" target="_blank" rel="noopener">Supertest</a></li></ul><h3 id="Mocha"><a href="#Mocha" class="headerlink" title="Mocha"></a>Mocha</h3><p>懒得介绍</p><h3 id="Should"><a href="#Should" class="headerlink" title="Should"></a>Should</h3><p>比较像自然语法, 所以选他</p><h3 id="Mocha-1"><a href="#Mocha-1" class="headerlink" title="Mocha"></a>Mocha</h3><p>比较简单, 所以挑它</p><h2 id="Script"><a href="#Script" class="headerlink" title="Script"></a>Script</h2><p>在使用之前, 先磨好工具, gulp+coffee, 因为对CoffeeScript 的好感, 所以这里也使用它</p><p>首先写好测试运行的Gulp Task.<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">gulp.task(&apos;test&apos;, [&apos;test:mocha&apos;]);</span><br><span class="line"></span><br><span class="line">gulp.task(&apos;test:mocha&apos;, function () &#123;</span><br><span class="line">var testFilename = &apos;*&apos;;</span><br><span class="line"></span><br><span class="line">if (args.u &amp;&amp; args.u.length &gt; 0) &#123;</span><br><span class="line">testFilename = args.u;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return gulp.src(&apos;test/&apos; + testFilename + &apos;.spec.&#123;js,coffee&#125;&apos;, &#123;</span><br><span class="line">read : false</span><br><span class="line">&#125;)</span><br><span class="line">.pipe($.if(&apos;*.coffee&apos;, $.coffee()))</span><br><span class="line">.pipe($.mocha(&#123;</span><br><span class="line">reporter : &apos;nyan&apos;,</span><br><span class="line">timeout  : 15000</span><br><span class="line">&#125;))</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p><p><code>gulp test</code>一下, 就可以运行测试了, 单一测试也是可以的, eg.<code>gulp test -u wan</code></p><p>然后可以开始动工了</p><h2 id="Unit"><a href="#Unit" class="headerlink" title="Unit"></a>Unit</h2><blockquote><p>Talk is cheap, show my code.</p></blockquote><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">supertest = require &apos;supertest&apos;</span><br><span class="line">should    = require &apos;should&apos;</span><br><span class="line"></span><br><span class="line">server    = supertest.agent &quot;http://#&#123;RouterUrl&#125;/cgi-bin/luci&quot;</span><br><span class="line"></span><br><span class="line">describe &apos;Wan Test&apos;, () -&gt;</span><br><span class="line"></span><br><span class="line">it &apos;Status&apos;, (done) -&gt;</span><br><span class="line">server.get(&apos;/api/wan/status&apos;)</span><br><span class="line">.expect(200)</span><br><span class="line">.expect((res) -&gt;</span><br><span class="line"># Expect Code</span><br><span class="line"># ...</span><br><span class="line">)</span><br><span class="line">.end(done)</span><br><span class="line"></span><br><span class="line"># Other Test</span><br><span class="line"># ...</span><br></pre></td></tr></table></figure><h1 id="Last"><a href="#Last" class="headerlink" title="Last"></a>Last</h1><p>我只是简单记录一下我干了什么而已…</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2016/01/06/luci/pb-api-test/&quot;&gt;http://arylo.github.io/2016/01/06/luci/pb-api-test/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 4分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;Front&quot;&gt;&lt;a href=&quot;#Front&quot; class=&quot;headerlink&quot; title=&quot;Front&quot;&gt;&lt;/a&gt;Front&lt;/h1&gt;&lt;p&gt;最近&lt;code&gt;Lafite Theme&lt;/code&gt;往&lt;code&gt;1.0.0&lt;/code&gt;走去, 测试变得非常频繁, 更新一次, 基本都要重新测试, 虽然之前写了不少测试单元(用&lt;code&gt;Phantom&lt;/code&gt;, 但因为各种各样的原因, 大部分的Unit都需要修改, 甚至完全失效. 关于这个, Kerwin基本崩溃状态, 之前不少Unit是他写的, 现在不行了, 重构的也是他…&lt;/p&gt;
+&lt;h2 id=&quot;And&quot;&gt;&lt;a href=&quot;#And&quot; class=&quot;headerlink&quot; title=&quot;And&quot;&gt;&lt;/a&gt;And&lt;/h2&gt;&lt;p&gt;还是那句, 触一发动全身. 接口这里的测试很多问题, 最大的问题是, 用原生Nodejs写的, 我自己做的轮子, 现在过了段时间, 反而不知道轮子怎样, 也促使我这次重构TestUnit之路.    &lt;/p&gt;
+&lt;h1 id=&quot;Content&quot;&gt;&lt;a href=&quot;#Content&quot; class=&quot;headerlink&quot; title=&quot;Content&quot;&gt;&lt;/a&gt;Content&lt;/h1&gt;&lt;h2 id=&quot;Thinking&quot;&gt;&lt;a href=&quot;#Thinking&quot; class=&quot;headerlink&quot; title=&quot;Thinking&quot;&gt;&lt;/a&gt;Thinking&lt;/h2&gt;&lt;p&gt;鉴于之前是我自己做的轮子, 所以这次直接寻找成熟的插件来做这个事情. 在Theme 那边, Kerwin 用的是Karma+Jasmine(虽然是我安利的…, 经常漫长的狗哥(&amp;gt;30min), 最后选择了Mocha+Sho
+    
+    </summary>
+    
+      <category term="Luci" scheme="http://arylo.github.io/categories/Luci/"/>
+    
+    
+      <category term="Nodejs" scheme="http://arylo.github.io/tags/Nodejs/"/>
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="REST" scheme="http://arylo.github.io/tags/REST/"/>
+    
+      <category term="Testing" scheme="http://arylo.github.io/tags/Testing/"/>
+    
+      <category term="Unit" scheme="http://arylo.github.io/tags/Unit/"/>
+    
+      <category term="API" scheme="http://arylo.github.io/tags/API/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>懒与学习笔记</title>
+    <link href="http://arylo.github.io/2015/12/10/other/other-lazy-n-note/"/>
+    <id>http://arylo.github.io/2015/12/10/other/other-lazy-n-note/</id>
+    <published>2015-12-10T23:11:08.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/12/10/other/other-lazy-n-note/">http://arylo.github.io/2015/12/10/other/other-lazy-n-note/</a></p></blockquote><hr><h1 id="0"><a href="#0" class="headerlink" title="0"></a>0</h1><p>为啥会有0?</p><h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>以前和Kerwin 弄了一个叫做<code>CrazyLazy</code>的网站, 我和他贯彻了如同网站名的理念, 然后这个站长草了……然后我单干了, 也就是这个Blog, 断断续续地在这里扎根一年了.</p><p>这个站当初是为了记下工作上解决过的问题, 学习到的知识, 不过也是懒, 开了一个坑, 没然后了. 现在不时记录一下, 慢慢对持续更新的博主表示尊敬, 不是技术上, 而是态度上. 虽然有些更新的都不是什么深奥的技术23333333</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><p>一年就这样过去了, <code>Luci</code>的没写多少, <code>Gulp</code>的干脆拖稿, 感觉没加上什么内容在这里. 当然我会尽可能更新更新更新.</p><h1 id="3"><a href="#3" class="headerlink" title="3"></a>3</h1><p><code>Lafite Theme</code>什么的, 当然能拖就拖</p><h1 id="4"><a href="#4" class="headerlink" title="4"></a>4</h1><p><code>PandoraBox</code>的首页啊? 额…有空又去吧<br><code>PandoraBox</code>的论坛啊? 额…容我三思</p><h1 id="5"><a href="#5" class="headerlink" title="5"></a>5</h1><p>嗯, 说这么多, 我还是不会填坑的.</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/12/10/other/other-lazy-n-note/&quot;&gt;http://arylo.github.io/2015/12/10/other/other-lazy
+      
+    
+    </summary>
+    
+      <category term="普通事" scheme="http://arylo.github.io/categories/%E6%99%AE%E9%80%9A%E4%BA%8B/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="Lazy" scheme="http://arylo.github.io/tags/Lazy/"/>
+    
+      <category term="Crazy Lazy" scheme="http://arylo.github.io/tags/Crazy-Lazy/"/>
+    
+      <category term="Note" scheme="http://arylo.github.io/tags/Note/"/>
+    
+      <category term="Study Note" scheme="http://arylo.github.io/tags/Study-Note/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>R3前夕</title>
+    <link href="http://arylo.github.io/2015/10/20/other/other_before-R3/"/>
+    <id>http://arylo.github.io/2015/10/20/other/other_before-R3/</id>
+    <published>2015-10-20T23:40:06.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/10/20/other/other_before-R3/">http://arylo.github.io/2015/10/20/other/other_before-R3/</a></p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><p>明天工厂就要M1固件, 我们在加班加点去调界面的BUG, 虽然BUG很多, 但这个应该不太影响吧?</p><p>现在也只是Beta, 打算大家轻喷轻喷…</p><p>附上加班的图片<br><img src="http://7xjp8o.com1.z0.glb.clouddn.com/image/IMG_3402.JPG" alt="Office Photo"></p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/10/20/other/other_before-R3/&quot;&gt;http://arylo.github.io/2015/10/20/other/other_before
+      
+    
+    </summary>
+    
+      <category term="普通事" scheme="http://arylo.github.io/categories/%E6%99%AE%E9%80%9A%E4%BA%8B/"/>
+    
+    
+      <category term="Pandorabox" scheme="http://arylo.github.io/tags/Pandorabox/"/>
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="Lintel" scheme="http://arylo.github.io/tags/Lintel/"/>
+    
+      <category term="M1" scheme="http://arylo.github.io/tags/M1/"/>
+    
+      <category term="R3" scheme="http://arylo.github.io/tags/R3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PandoraBox的Bug提交平台再启</title>
+    <link href="http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/"/>
+    <id>http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/</id>
+    <published>2015-09-15T09:55:06.000Z</published>
+    <updated>2018-05-22T04:27:31.959Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/">http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/</a></p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><p>是这样的, 是这样的, 原本那个&lt;bug.pandorabox.org.cn&gt;一直提交失败, L关于这个事, 一直问我什么时候修复, 详见<a href="/2015/08/01/ali_f@ck-about-redmine-postgresql/">关于Pandorabox的redmine, 一直读取问题</a>, 大家都知道我一直<del>在装逼</del>很忙的啊! 才没有多少时间去修复.</p><h1 id="A"><a href="#A" class="headerlink" title="A"></a>A</h1><p>先听我说, 其实我<del>一点都不</del>一直想修复这个问题, 因为时间都被我拿去<del>装逼</del>写Web, 但L大大毫不犹豫地将最新的<code>M1</code>給我一台, 小的瞬时泪流满面, 内心汹涌澎湃, 犹如千万只草泥马在奔腾…(后略三万字)</p><h1 id="也是-A"><a href="#也是-A" class="headerlink" title="也是 A"></a>也是 A</h1><p>好在当时使用了<code>docker</code>, 所以<code>redmine</code>的迁移作业还是蛮顺畅的, 不过当时还挺怕的, 因为之前服务器还没有升级的时候, <code>GitLab</code>和<code>Redmine</code>两个直接跑满服务器的内存, 导致要从网页端的<code>bash</code>关闭其中一个才能恢复(监控宝你不要再叫了, 我知道啊!!)</p><p>现在服务<a id="more"></a>器就剩下大概50M作业, 如果有哪个program比较调皮, 内存溢出, 我就<em>呵呵</em>了.</p><p>估计要找个时间去看一下, 为什么会占这么多内存.</p><h1 id="B"><a href="#B" class="headerlink" title="B"></a>B</h1><p>嗯, 我到现在都不知道是什么问题, <code>Aliyun</code>那边为什么会这样子, 而我转到这边的服务器之后一切正常(就是速度还是慢了一点)</p><h2 id="B-A-B"><a href="#B-A-B" class="headerlink" title="B A B"></a>B A B</h2><p>别追我新WebUI! 别追我新WebUI! 别追我新WebUI! 重要的事要说三遍!! 呜呜, 可怜我一直被<strong>L大婶婶</strong> 无可伦比的<del>臀部</del>臂弯压迫, 每天都生活在水深火热之中, 所以别追我啦! (八戒, 别追啦~)</p><h1 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h1><p>L大大, 问题已经解决了, 什么时候可以叫Jet发一台给我, 不要给图片我就糊弄过去!!</p><h1 id="15-Sep-的PS"><a href="#15-Sep-的PS" class="headerlink" title="15 Sep. 的PS"></a>15 Sep. 的PS</h1><p>不……兄弟们, 我受到诈骗了, Jet竟然说<strong>人死了就会死, 到时候会烧给你~</strong></p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/&quot;&gt;http://arylo.github.io/2015/09/15/server/pandorabox-new-issus/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;F&quot;&gt;&lt;a href=&quot;#F&quot; class=&quot;headerlink&quot; title=&quot;F&quot;&gt;&lt;/a&gt;F&lt;/h1&gt;&lt;p&gt;是这样的, 是这样的, 原本那个&amp;lt;bug.pandorabox.org.cn&amp;gt;一直提交失败, L关于这个事, 一直问我什么时候修复, 详见&lt;a href=&quot;/2015/08/01/ali_f@ck-about-redmine-postgresql/&quot;&gt;关于Pandorabox的redmine, 一直读取问题&lt;/a&gt;, 大家都知道我一直&lt;del&gt;在装逼&lt;/del&gt;很忙的啊! 才没有多少时间去修复.&lt;/p&gt;
+&lt;h1 id=&quot;A&quot;&gt;&lt;a href=&quot;#A&quot; class=&quot;headerlink&quot; title=&quot;A&quot;&gt;&lt;/a&gt;A&lt;/h1&gt;&lt;p&gt;先听我说, 其实我&lt;del&gt;一点都不&lt;/del&gt;一直想修复这个问题, 因为时间都被我拿去&lt;del&gt;装逼&lt;/del&gt;写Web, 但L大大毫不犹豫地将最新的&lt;code&gt;M1&lt;/code&gt;給我一台, 小的瞬时泪流满面, 内心汹涌澎湃, 犹如千万只草泥马在奔腾…(后略三万字)&lt;/p&gt;
+&lt;h1 id=&quot;也是-A&quot;&gt;&lt;a href=&quot;#也是-A&quot; class=&quot;headerlink&quot; title=&quot;也是 A&quot;&gt;&lt;/a&gt;也是 A&lt;/h1&gt;&lt;p&gt;好在当时使用了&lt;code&gt;docker&lt;/code&gt;, 所以&lt;code&gt;redmine&lt;/code&gt;的迁移作业还是蛮顺畅的, 不过当时还挺怕的, 因为之前服务器还没有升级的时候, &lt;code&gt;GitLab&lt;/code&gt;和&lt;code&gt;Redmine&lt;/code&gt;两个直接跑满服务器的内存, 导致要从网页端的&lt;code&gt;bash&lt;/code&gt;关闭其中一个才能恢复(监控宝你不要再叫了, 我知道啊!!)&lt;/p&gt;
+&lt;p&gt;现在服务
+    
+    </summary>
+    
+      <category term="Server" scheme="http://arylo.github.io/categories/Server/"/>
+    
+    
+      <category term="Pandorabox" scheme="http://arylo.github.io/tags/Pandorabox/"/>
+    
+      <category term="M1" scheme="http://arylo.github.io/tags/M1/"/>
+    
+      <category term="OpenWrt" scheme="http://arylo.github.io/tags/OpenWrt/"/>
+    
+      <category term="Redmine" scheme="http://arylo.github.io/tags/Redmine/"/>
+    
+      <category term="Issus" scheme="http://arylo.github.io/tags/Issus/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Gulp游记]Gulp 学习笔记</title>
+    <link href="http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/"/>
+    <id>http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/</id>
+    <published>2015-08-30T01:46:55.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/">http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/</a><br>大概需要阅读时间: 2分钟</p></blockquote><hr><h1 id="1"><a href="#1" class="headerlink" title="1"></a>1</h1><p>我只是想记下关于我所学习的Gulp, 以防我某天失忆了</p><h1 id="2"><a href="#2" class="headerlink" title="2"></a>2</h1><h2 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h2><p>记下我平时用的Gulp 模块, 顺便做一个推荐</p><h3 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h3><ul><li><code>gulp-processhtml</code></li><li><code>gulp-coffee</code></li><li><code>gulp-ng-annotate</code><blockquote><p>只要是使用<code>Angular</code>就推荐使用<a id="more"></a></p></blockquote></li><li><code>gulp-stylus</code></li><li><code>gulp-autoprefixer</code><blockquote><p>为CSS文件加前缀</p></blockquote></li></ul><h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><ul><li><code>browser-sync</code></li><li><code>connect-livereload</code></li><li><code>http-proxy-middleware</code></li><li><code>gulp-watch</code></li></ul><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ul><li><code>gulp-jshint</code></li><li><code>karma</code></li><li><code>gulp-karma</code><blockquote><p>然并卵, 其实只需使用<code>karma</code>就行了</p></blockquote></li><li><code>karma-jasmine</code></li><li><code>jasmine-core</code></li><li><code>karma-coffee-preprocessor</code></li><li><code>karma-coverage</code><blockquote><p>下面这些是启动器</p></blockquote></li><li><code>karma-chrome-launcher</code></li><li><code>karma-firefox-launcher</code></li><li><code>karma-ie-launcher</code></li><li><code>karma-safari-launcher</code></li></ul><h3 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h3><ul><li><code>gulp-htmlmin</code><blockquote><p>HTML 压缩</p></blockquote></li><li><code>gulp-uglify</code><blockquote><p>JS 压缩</p></blockquote></li><li><code>gulp-cssmin</code></li><li><code>gulp-minify-css</code></li><li><code>gulp-csso</code><blockquote><p>很多人说<code>csso</code>更好, 我没有对比过, 不评论</p></blockquote></li><li><code>gulp-imagemin</code></li></ul><h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><ul><li><code>gulp-scp</code></li><li><code>gulp-scp2</code><blockquote><p>不知道这两个哪个好, <a href="/2015/07/08/js_npm-grunt-gulp-scp/">反正我用不了</a></p></blockquote></li><li><code>gulp-ftp</code></li><li><code>gulp-sftp</code></li><li><code>git-rev</code></li><li><code>git-rev-sync</code><blockquote><p>获取Git版本用</p></blockquote></li><li><code>gulp-concat</code><blockquote><p>减少Get连接数, 你懂的</p></blockquote></li></ul><h3 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h3><ul><li><code>gulp-if</code></li><li><code>merge-stream</code><blockquote><p>使Task 有唯一的出口用    </p></blockquote></li><li><code>streamqueue</code><blockquote><p>整合相同的流程</p></blockquote></li></ul><h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul><li><code>gulp-clean</code></li><li><code>gulp-cache</code></li><li><code>gulp-notify</code></li><li><code>gulp-rename</code></li><li><code>gulp-replace</code></li><li><code>gulp-tap</code> <a href="/2016/06/28/javascript/gulp-tap/">Link</a><blockquote><p>我用于识别文件内容, 不知道其他人怎样用</p></blockquote></li><li><code>gulp-load-plugins</code><blockquote><p>自动加载Gulp模块</p></blockquote></li><li><code>gulp-task-listing</code><blockquote><p>获取全部Gulp Task</p></blockquote></li><li><code>moment</code><blockquote><p>一个时间显示模块, 很值得推荐</p></blockquote></li><li><code>yargs</code><blockquote><p>对命令行使用者很不错</p></blockquote></li></ul><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/&quot;&gt;http://arylo.github.io/2015/08/30/javascript/js_gulp-menu/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 2分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;1&quot;&gt;&lt;a href=&quot;#1&quot; class=&quot;headerlink&quot; title=&quot;1&quot;&gt;&lt;/a&gt;1&lt;/h1&gt;&lt;p&gt;我只是想记下关于我所学习的Gulp, 以防我某天失忆了&lt;/p&gt;
+&lt;h1 id=&quot;2&quot;&gt;&lt;a href=&quot;#2&quot; class=&quot;headerlink&quot; title=&quot;2&quot;&gt;&lt;/a&gt;2&lt;/h1&gt;&lt;h2 id=&quot;2-1&quot;&gt;&lt;a href=&quot;#2-1&quot; class=&quot;headerlink&quot; title=&quot;2.1&quot;&gt;&lt;/a&gt;2.1&lt;/h2&gt;&lt;p&gt;记下我平时用的Gulp 模块, 顺便做一个推荐&lt;/p&gt;
+&lt;h3 id=&quot;预处理&quot;&gt;&lt;a href=&quot;#预处理&quot; class=&quot;headerlink&quot; title=&quot;预处理&quot;&gt;&lt;/a&gt;预处理&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gulp-processhtml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gulp-coffee&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;gulp-ng-annotate&lt;/code&gt;&lt;blockquote&gt;
+&lt;p&gt;只要是使用&lt;code&gt;Angular&lt;/code&gt;就推荐使用
+    
+    </summary>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/categories/Javascript/"/>
+    
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="Gulp游记" scheme="http://arylo.github.io/tags/Gulp%E6%B8%B8%E8%AE%B0/"/>
+    
+      <category term="学习笔记" scheme="http://arylo.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>属于6K的配置</title>
+    <link href="http://arylo.github.io/2015/08/04/other/configuration_computer-6k/"/>
+    <id>http://arylo.github.io/2015/08/04/other/configuration_computer-6k/</id>
+    <published>2015-08-04T22:34:29.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/08/04/other/configuration_computer-6k/">http://arylo.github.io/2015/08/04/other/configuration_computer-6k/</a><br>大概需要阅读时间: 2分钟</p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><p>今晚高中同学<em>老简</em>找我要份电脑配置, 这个… 你不能找我要就有, 你要给点时间, 我要大家知道, 我配的是这个样子, 你们配得也是这个样子(泥垢了</p><h2 id="N"><a href="#N" class="headerlink" title="N"></a>N</h2><p>要求可不低啊,</p><ul><li>6k左右</li><li>Intel E3 1231 V3</li><li>N卡 GTX 970</li><li>SSD要120G, 最好是三星或者闪迪</li></ul><h2 id="N-1"><a href="#N-1" class="headerlink" title="N"></a>N</h2><a id="more"></a><p>单看6K就觉得剩很多, 但显卡就占了三分之一了…CPU+SSD+硬盘又没有了2k..剩下可选的真的不多</p><h1 id="A"><a href="#A" class="headerlink" title="A"></a>A</h1><p>废话不多, 直接上单</p><table><thead><tr><th style="text-align:center">类别</th><th style="text-align:center">品牌</th><th style="text-align:center">型号</th><th style="text-align:center">报价</th><th style="text-align:center">实价</th><th style="text-align:center">实价地址</th></tr></thead><tbody><tr><td style="text-align:center">CPU</td><td style="text-align:center">Intel</td><td style="text-align:center">E3 1231 V3</td><td style="text-align:center">1490</td><td style="text-align:center">1349</td><td style="text-align:center"><a href="https://s.taobao.com/search?initiative_id=tbindexz_20150804&amp;spm=a21bo.7724922.8452-taobao-item.1&amp;sourceId=tb.index&amp;search_type=item&amp;ssid=s5-e&amp;commend=all&amp;imgfile=&amp;q=1231+v3&amp;suggest=0_1&amp;_input_charset=utf-8&amp;wq=1231&amp;suggest_query=1231&amp;source=suggest" target="_blank" rel="noopener">某宝</a></td></tr><tr><td style="text-align:center">CPU散热</td><td style="text-align:center">Tt</td><td style="text-align:center">3.0</td><td style="text-align:center">299</td><td style="text-align:center">299</td><td style="text-align:center"><a href="http://item.jd.com/876259.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">主板</td><td style="text-align:center">华硕</td><td style="text-align:center">B85M-G Plus</td><td style="text-align:center">579</td><td style="text-align:center">579</td><td style="text-align:center"><a href="http://item.jd.com/1604452.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">内存</td><td style="text-align:center">海盗船</td><td style="text-align:center">复仇者 1600 8G</td><td style="text-align:center">569</td><td style="text-align:center">349</td><td style="text-align:center"><a href="http://item.jd.com/1209821.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">硬盘</td><td style="text-align:center">闪迪</td><td style="text-align:center">至尊高速版-II代 120G</td><td style="text-align:center">429</td><td style="text-align:center">379</td><td style="text-align:center"><a href="http://item.jd.com/1203631.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center"></td><td style="text-align:center">希捷</td><td style="text-align:center">500G</td><td style="text-align:center">347</td><td style="text-align:center">309</td><td style="text-align:center"><a href="http://item.jd.com/502547.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">显卡</td><td style="text-align:center">华硕</td><td style="text-align:center">GTX 970</td><td style="text-align:center">3199</td><td style="text-align:center">2599</td><td style="text-align:center"><a href="http://item.jd.com/1224588.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">电源</td><td style="text-align:center">游戏悍将</td><td style="text-align:center">霸道6 R550</td><td style="text-align:center">399</td><td style="text-align:center">309</td><td style="text-align:center"><a href="http://item.jd.com/1300394.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">机箱</td><td style="text-align:center">乔思伯</td><td style="text-align:center">C3 M-ATX机箱</td><td style="text-align:center">没查</td><td style="text-align:center">269</td><td style="text-align:center"><a href="http://item.jd.com/1222810.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">(备选)</td><td style="text-align:center">Tt</td><td style="text-align:center">星际指挥官3.0版</td><td style="text-align:center">没查</td><td style="text-align:center">279</td><td style="text-align:center"><a href="http://item.jd.com/1472230.html" target="_blank" rel="noopener">某东</a></td></tr><tr><td style="text-align:center">总价</td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center">7311</td><td style="text-align:center">6441(6541)</td></tr></tbody></table><blockquote><p>价格均在<code>2015-08-04</code>查出的<br>报价在太平洋XX网(广州地区)查出<br>实价由某宝和某东提供</p></blockquote><h2 id="S"><a href="#S" class="headerlink" title="S"></a>S</h2><p>原本打算配个镁光SSD的, 但他不喜欢, 我也没办法…机箱是个问题, 显卡28cm长…小机箱很难适配到, 可以适配的, 很多都没有120的风扇位…<br>主板原本打算挑个便宜的, 但看到3.1, 毫不犹豫, 直接选它.<br>其他应该没什么好解释了..应该(- .-)</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/08/04/other/configuration_computer-6k/&quot;&gt;http://arylo.github.io/2015/08/04/other/configuration_computer-6k/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 2分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;F&quot;&gt;&lt;a href=&quot;#F&quot; class=&quot;headerlink&quot; title=&quot;F&quot;&gt;&lt;/a&gt;F&lt;/h1&gt;&lt;p&gt;今晚高中同学&lt;em&gt;老简&lt;/em&gt;找我要份电脑配置, 这个… 你不能找我要就有, 你要给点时间, 我要大家知道, 我配的是这个样子, 你们配得也是这个样子(泥垢了&lt;/p&gt;
+&lt;h2 id=&quot;N&quot;&gt;&lt;a href=&quot;#N&quot; class=&quot;headerlink&quot; title=&quot;N&quot;&gt;&lt;/a&gt;N&lt;/h2&gt;&lt;p&gt;要求可不低啊,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;6k左右&lt;/li&gt;
+&lt;li&gt;Intel E3 1231 V3&lt;/li&gt;
+&lt;li&gt;N卡 GTX 970&lt;/li&gt;
+&lt;li&gt;SSD要120G, 最好是三星或者闪迪&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;N-1&quot;&gt;&lt;a href=&quot;#N-1&quot; class=&quot;headerlink&quot; title=&quot;N&quot;&gt;&lt;/a&gt;N&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="配置" scheme="http://arylo.github.io/categories/%E9%85%8D%E7%BD%AE/"/>
+    
+    
+      <category term="Arylo" scheme="http://arylo.github.io/tags/Arylo/"/>
+    
+      <category term="配置" scheme="http://arylo.github.io/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+      <category term="1231 V3" scheme="http://arylo.github.io/tags/1231-V3/"/>
+    
+      <category term="GTX970" scheme="http://arylo.github.io/tags/GTX970/"/>
+    
+      <category term="6k" scheme="http://arylo.github.io/tags/6k/"/>
+    
+      <category term="老简" scheme="http://arylo.github.io/tags/%E8%80%81%E7%AE%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>通过iTerm2连接远程服务器</title>
+    <link href="http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/"/>
+    <id>http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/</id>
+    <published>2015-08-03T02:44:18.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/">http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/</a><br>大概需要阅读时间: 3分钟</p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><blockquote><p>知道的人都知道, 不知道的人还未知道.</p></blockquote><p>最近我换上了MBPR, 比L大的晚了两个月(没办法~人地有钱), 在维护<code>pandorabox</code>的服务器上面出现一个小小的问题.</p><h1 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h1><p>以前呢, 我还在用<code>windows</code>, 所以一般都是用<code>putty</code>就好了, 不过呢, 有人说, <strong>在<code>OSX</code>上面不能用<code>windows</code>代替品这种想法来寻找需要的软件, 而是用某种功能这种想法来搜软件</strong>. 所以, 我就直接把putty抛弃(其实不舍得iTerm的环境).</p><p>按正常呢, 连接ssh应该很简单的事, 是的, 的确很简单. 但我没可能全部操作都只需要<code>ssh</code>, 我还需要<code>Download</code>and<code>Upload</code>, 这才是我觉得最麻烦的地方 </p><h1 id="A"><a href="#A" class="headerlink" title="A"></a>A</h1><h2 id="Better-Tool"><a href="#Better-Tool" class="headerlink" title="Better Tool?"></a>Better Tool?<a id="more"></a></h2><p>原本打算照常用<code>scp</code>的, 但在<code>OSX</code>上面, 貌似有更好的方法, 就是使用<code>rz sz</code>.</p><h2 id="Install-amp-Setting"><a href="#Install-amp-Setting" class="headerlink" title="Install &amp; Setting"></a>Install &amp; Setting</h2><p>下面是安装步骤(From <a href="https://github.com/mmastrac/iterm2-zmodem" target="_blank" rel="noopener">mmastrac/iterm2-zmodem</a>)</p><ul><li>Install lrzsz on OSX: brew install lrzsz</li><li>Save the iterm2-send-zmodem.sh and iterm2-recv-zmodem.sh scripts in /usr/local/bin/</li><li>Set up Triggers in iTerm 2 like so:</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Regular expression: \*\*B0100</span><br><span class="line">Action: Run Silent Coprocess</span><br><span class="line">Parameters: /usr/local/bin/iterm2-send-zmodem.sh</span><br><span class="line"></span><br><span class="line">Regular expression: \*\*B00000000000000</span><br><span class="line">Action: Run Silent Coprocess</span><br><span class="line">Parameters: /usr/local/bin/iterm2-recv-zmodem.sh</span><br></pre></td></tr></table></figure><p>这些英文这么简单, 不用翻了吧?<br>大概就是用<code>brew</code>安装<code>lrzsz</code>, 再将两个sh文件存放在<code>/usr/local/bin/</code>, 再在iTerm里面设置就OK了</p><h2 id="Enjoy"><a href="#Enjoy" class="headerlink" title="Enjoy"></a>Enjoy</h2><p>使用方法(From <a href="https://github.com/mmastrac/iterm2-zmodem" target="_blank" rel="noopener">mmastrac/iterm2-zmodem</a>)</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">To send a file to a remote machine:</span><br><span class="line"></span><br><span class="line">Type &quot;rz&quot; on the remote machine</span><br><span class="line">Select the file(s) on the local machine to send</span><br><span class="line">Wait for the coprocess indicator to disappear</span><br><span class="line">The receive a file from a remote machine</span><br><span class="line"></span><br><span class="line">Type &quot;sz filename1 filename2 … filenameN&quot; on the remote machine</span><br><span class="line">Select the folder to receive to on the local machine</span><br><span class="line">Wait for the coprocess indicator to disappear</span><br></pre></td></tr></table></figure><p>这里稍微通俗地说一下, </p><ul><li>在远程服务器输入<code>rz</code>, 等待一会就将选择的文件(?)发送到服务器上</li><li>在远程服务器输入<code>sz ...</code>, 就会将选择的文件发到本地的PC上</li></ul><h1 id="B"><a href="#B" class="headerlink" title="B"></a>B</h1><p>反正我是不行的 </p><ul><li>远程服务器还是会提示<code>lrzsz</code>尚未安装…</li><li>而且不能操作文件夹…必须将文件夹打包才行</li></ul><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/&quot;&gt;http://arylo.github.io/2015/08/03/other/osx_iterm-ssh/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 3分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;F&quot;&gt;&lt;a href=&quot;#F&quot; class=&quot;headerlink&quot; title=&quot;F&quot;&gt;&lt;/a&gt;F&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;知道的人都知道, 不知道的人还未知道.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;最近我换上了MBPR, 比L大的晚了两个月(没办法~人地有钱), 在维护&lt;code&gt;pandorabox&lt;/code&gt;的服务器上面出现一个小小的问题.&lt;/p&gt;
+&lt;h1 id=&quot;Q&quot;&gt;&lt;a href=&quot;#Q&quot; class=&quot;headerlink&quot; title=&quot;Q&quot;&gt;&lt;/a&gt;Q&lt;/h1&gt;&lt;p&gt;以前呢, 我还在用&lt;code&gt;windows&lt;/code&gt;, 所以一般都是用&lt;code&gt;putty&lt;/code&gt;就好了, 不过呢, 有人说, &lt;strong&gt;在&lt;code&gt;OSX&lt;/code&gt;上面不能用&lt;code&gt;windows&lt;/code&gt;代替品这种想法来寻找需要的软件, 而是用某种功能这种想法来搜软件&lt;/strong&gt;. 所以, 我就直接把putty抛弃(其实不舍得iTerm的环境).&lt;/p&gt;
+&lt;p&gt;按正常呢, 连接ssh应该很简单的事, 是的, 的确很简单. 但我没可能全部操作都只需要&lt;code&gt;ssh&lt;/code&gt;, 我还需要&lt;code&gt;Download&lt;/code&gt;and&lt;code&gt;Upload&lt;/code&gt;, 这才是我觉得最麻烦的地方 &lt;/p&gt;
+&lt;h1 id=&quot;A&quot;&gt;&lt;a href=&quot;#A&quot; class=&quot;headerlink&quot; title=&quot;A&quot;&gt;&lt;/a&gt;A&lt;/h1&gt;&lt;h2 id=&quot;Better-Tool&quot;&gt;&lt;a href=&quot;#Better-Tool&quot; class=&quot;headerlink&quot; title=&quot;Better Tool?&quot;&gt;&lt;/a&gt;Better Tool?
+    
+    </summary>
+    
+      <category term="OSX" scheme="http://arylo.github.io/categories/OSX/"/>
+    
+    
+      <category term="OSX" scheme="http://arylo.github.io/tags/OSX/"/>
+    
+      <category term="iTerm2" scheme="http://arylo.github.io/tags/iTerm2/"/>
+    
+      <category term="putty" scheme="http://arylo.github.io/tags/putty/"/>
+    
+      <category term="server" scheme="http://arylo.github.io/tags/server/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于Pandorabox的redmine, 一直读取问题</title>
+    <link href="http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/"/>
+    <id>http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/</id>
+    <published>2015-08-01T23:40:52.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/">http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/</a></p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><p>大家都知道, L大说了, Bug可以在<a href="http://bug.pandorabox.org.cn/" target="_blank" rel="noopener">这里</a>提交, 不过, 大家都说, 怎么提交不了!!!! MD!! 歪歪你是不是偷懒买了破服务器啊!!!</p><p>客官客官, 冤枉啊, (阿里云)服务器是L大买的, 有什么硬件上问题, 你可以尽情地打他的屁股~~</p><h1 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h1><p>不过, 这个真的是很大问题, 虽然我是用docker来搭的, 应该没什么问题的, 而且我之前还在<code>linode</code>搭过呢, 不关我事吧?</p><p>我在本地(OSX下的boot2docker)搭过一样环境, 却没什么问题. Windows下也没什么问题, 可能同boot2docker环境下吧? 所以也没出现这个问题, 是环境不对?</p><h1 id="A"><a href="#A" class="headerlink" title="A"></a>A</h1><blockquote><p>待续<a id="more"></a></p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">等我将数据文件和配置文件都拉到本地去测试一下, 如果是阿里云问题, 那应该考虑一下这个服务器可以干什么了</span><br></pre></td></tr></table></figure><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/&quot;&gt;http://arylo.github.io/2015/08/01/other/ali_f@ck-about-redmine-postgresql/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;F&quot;&gt;&lt;a href=&quot;#F&quot; class=&quot;headerlink&quot; title=&quot;F&quot;&gt;&lt;/a&gt;F&lt;/h1&gt;&lt;p&gt;大家都知道, L大说了, Bug可以在&lt;a href=&quot;http://bug.pandorabox.org.cn/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;这里&lt;/a&gt;提交, 不过, 大家都说, 怎么提交不了!!!! MD!! 歪歪你是不是偷懒买了破服务器啊!!!&lt;/p&gt;
+&lt;p&gt;客官客官, 冤枉啊, (阿里云)服务器是L大买的, 有什么硬件上问题, 你可以尽情地打他的屁股~~&lt;/p&gt;
+&lt;h1 id=&quot;Q&quot;&gt;&lt;a href=&quot;#Q&quot; class=&quot;headerlink&quot; title=&quot;Q&quot;&gt;&lt;/a&gt;Q&lt;/h1&gt;&lt;p&gt;不过, 这个真的是很大问题, 虽然我是用docker来搭的, 应该没什么问题的, 而且我之前还在&lt;code&gt;linode&lt;/code&gt;搭过呢, 不关我事吧?&lt;/p&gt;
+&lt;p&gt;我在本地(OSX下的boot2docker)搭过一样环境, 却没什么问题. Windows下也没什么问题, 可能同boot2docker环境下吧? 所以也没出现这个问题, 是环境不对?&lt;/p&gt;
+&lt;h1 id=&quot;A&quot;&gt;&lt;a href=&quot;#A&quot; class=&quot;headerlink&quot; title=&quot;A&quot;&gt;&lt;/a&gt;A&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;待续
+    
+    </summary>
+    
+      <category term="服务器" scheme="http://arylo.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    
+      <category term="Pandorabox" scheme="http://arylo.github.io/tags/Pandorabox/"/>
+    
+      <category term="aliyun" scheme="http://arylo.github.io/tags/aliyun/"/>
+    
+      <category term="docker" scheme="http://arylo.github.io/tags/docker/"/>
+    
+      <category term="redmine" scheme="http://arylo.github.io/tags/redmine/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>node-gyp rebuild时间过长</title>
+    <link href="http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/"/>
+    <id>http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/</id>
+    <published>2015-07-28T02:12:00.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/">http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/</a><br>大概需要阅读时间: 2分钟</p></blockquote><hr><h1 id="F"><a href="#F" class="headerlink" title="F"></a>F</h1><p>最近从Windows转到OSX上面, 环境什么的都要重新配置</p><p>因为最近在做前端开发, 而且用上不少npm相关的东西, 所以也要搭建nodejs环境。例如<code>grunt</code>, <code>gulp</code>, <code>bower</code>, <code>nrm</code>, <code>nvm</code>..etc</p><h1 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h1><p>不过呢, 在安装的<code>hexo-cli</code>的时候出现了很奇怪的问题, 就是在<code>node-gyp rebuild</code>消耗的时间过于长, 这个问题灰常特别, 因为在ubuntu上面是没有这个问题. <code>--verbose</code>一下, 发现它在不断的编译.</p><h2 id="Try0"><a href="#Try0" class="headerlink" title="Try0"></a>Try0</h2><p>在Google了一圈, 基本都没有什么解决方法. 在V2EX上还有人说是地址被墙了, 应该换成taobao的源, 那下载会快很多, 大哥, 我老早就<code>nrm use taobao</code>了, 有关系吗?</p><h2 id="Try1"><a href="#Try1" class="headerlink" title="Try1"></a>Try1</h2><p>有人说, <code>brew</code>安装的<code>node</code>是缺斤少两的,<a id="more"></a> 所以才会有这种情况, 需要在官网下载源码, 覆盖它, 文件就解决了.<br>然而, 我就是为了这个问题, 把在官网下载的<code>node</code>活生生的删除了, 步骤见<a href="https://gist.github.com/TonyMtz/d75101d9bdf764c890ef" target="_blank" rel="noopener">这里</a>, 再用<code>brew</code>安装的, 所以这个也不行</p><h1 id="A"><a href="#A" class="headerlink" title="A"></a>A</h1><p>关于这个问题, 我也没什么解决方法, 就是放在那里等, 让它编译, 编译完之后, 问题解决了…<br>估计是CPU性能不够强悍, 不爽这编译速度(毕竟用惯了公司的服务器- .-, 而且, 为什么没有加上<code>-j</code>这种参数!!<br>查看编译日志, 好像一直在编译最新的<code>node</code>, 有人能告诉我是什么问题吗?</p><h1 id="Version"><a href="#Version" class="headerlink" title="Version"></a>Version</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> ~ $ npm -v</span><br><span class="line">&gt; 2.12.1</span><br><span class="line"> ~ $ node -v</span><br><span class="line">&gt; v0.12.7</span><br><span class="line"> ~ $ nvm --version</span><br><span class="line">&gt; 0.25.4</span><br></pre></td></tr></table></figure><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/&quot;&gt;http://arylo.github.io/2015/07/28/javascript/node_node-gyp-rebuild-too-long/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 2分钟&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;F&quot;&gt;&lt;a href=&quot;#F&quot; class=&quot;headerlink&quot; title=&quot;F&quot;&gt;&lt;/a&gt;F&lt;/h1&gt;&lt;p&gt;最近从Windows转到OSX上面, 环境什么的都要重新配置&lt;/p&gt;
+&lt;p&gt;因为最近在做前端开发, 而且用上不少npm相关的东西, 所以也要搭建nodejs环境。例如&lt;code&gt;grunt&lt;/code&gt;, &lt;code&gt;gulp&lt;/code&gt;, &lt;code&gt;bower&lt;/code&gt;, &lt;code&gt;nrm&lt;/code&gt;, &lt;code&gt;nvm&lt;/code&gt;..etc&lt;/p&gt;
+&lt;h1 id=&quot;Q&quot;&gt;&lt;a href=&quot;#Q&quot; class=&quot;headerlink&quot; title=&quot;Q&quot;&gt;&lt;/a&gt;Q&lt;/h1&gt;&lt;p&gt;不过呢, 在安装的&lt;code&gt;hexo-cli&lt;/code&gt;的时候出现了很奇怪的问题, 就是在&lt;code&gt;node-gyp rebuild&lt;/code&gt;消耗的时间过于长, 这个问题灰常特别, 因为在ubuntu上面是没有这个问题. &lt;code&gt;--verbose&lt;/code&gt;一下, 发现它在不断的编译.&lt;/p&gt;
+&lt;h2 id=&quot;Try0&quot;&gt;&lt;a href=&quot;#Try0&quot; class=&quot;headerlink&quot; title=&quot;Try0&quot;&gt;&lt;/a&gt;Try0&lt;/h2&gt;&lt;p&gt;在Google了一圈, 基本都没有什么解决方法. 在V2EX上还有人说是地址被墙了, 应该换成taobao的源, 那下载会快很多, 大哥, 我老早就&lt;code&gt;nrm use taobao&lt;/code&gt;了, 有关系吗?&lt;/p&gt;
+&lt;h2 id=&quot;Try1&quot;&gt;&lt;a href=&quot;#Try1&quot; class=&quot;headerlink&quot; title=&quot;Try1&quot;&gt;&lt;/a&gt;Try1&lt;/h2&gt;&lt;p&gt;有人说, &lt;code&gt;brew&lt;/code&gt;安装的&lt;code&gt;node&lt;/code&gt;是缺斤少两的,
+    
+    </summary>
+    
+      <category term="nodejs" scheme="http://arylo.github.io/categories/nodejs/"/>
+    
+    
+      <category term="nodejs" scheme="http://arylo.github.io/tags/nodejs/"/>
+    
+      <category term="npm" scheme="http://arylo.github.io/tags/npm/"/>
+    
+      <category term="nvm" scheme="http://arylo.github.io/tags/nvm/"/>
+    
+      <category term="osx" scheme="http://arylo.github.io/tags/osx/"/>
+    
+      <category term="mac" scheme="http://arylo.github.io/tags/mac/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Gulp-scp无法传输</title>
+    <link href="http://arylo.github.io/2015/07/08/javascript/js_npm-grunt-gulp-scp/"/>
+    <id>http://arylo.github.io/2015/07/08/javascript/js_npm-grunt-gulp-scp/</id>
+    <published>2015-07-08T16:40:27.000Z</published>
+    <updated>2018-05-22T04:27:31.955Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>&gt; 本文链接：<a href="http://arylo.github.io/2015/07/08/javascript/js_npm-grunt-gulp-scp/">http://arylo.github.io/2015/07/08/javascript/js_npm-grunt-gulp-scp/</a><br>&gt; 大概需要阅读时间: 3分钟<br><br>—<br><br># 浪费了一个下午<br><br>之前我用WinScp的同步功能, 但只要<code>gulp clean</code>, 就立刻报错, 无奈之下只好寻找相关的gulp组件<br><br>在npm下就有两个相关的gulp组件, 分别是<code>gulp-scp</code> 和 <code>gulp-scp2</code>, 我一个个地说<br><br># Gulp-scp<br>## NPM地址<br><br><a href="https://www.npmjs.com/package/gulp-scp" target="_blank" rel="noopener">https://www.npmjs.com/package/gulp-scp</a><br><br>## 配置如下<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">gulp.src(<span class="string">'./build/index.html'</span>)</span><br><span class="line">    .pipe(scp(&#123;</span><br><span class="line">        <span class="string">"host"</span>: scpConf.host,</span><br><span class="line">        <span class="string">"port"</span>: scpConf.port,</span><br><span class="line">        <span class="string">"user"</span>: scpConf.username,</span><br><span class="line">        <span class="string">"path"</span>: <span class="string">"/www/"</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure><h2 id="然并卵"><a href="#然并卵" class="headerlink" title="然并卵"></a>然并卵</h2><p>可能是在Window下, 所以一直报错<code>ssh: F: no address associated with name</code><br>所以, SKIP</p><h1 id="Gulp-scp2"><a href="#Gulp-scp2" class="headerlink" title="Gulp-scp2"></a>Gulp-scp2</h1><h2 id="NPM地址"><a href="#NPM地址" class="headerlink" title="NPM地址"></a>NPM地址</h2><p><a href="https://www.npmjs.com/package/gulp-scp2" target="_blank" rel="noopener">https://www.npmjs.com/package/gulp-scp2</a></p><h2 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a>配置如下</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">gulp.src(<span class="string">'./build/index.html'</span>)</span><br><span class="line">    .pipe(scp(&#123;</span><br><span class="line">        <span class="string">"host"</span>: scpConf.host,</span><br><span class="line">        <span class="string">"port"</span>: scpConf.port,</span><br><span class="line">        <span class="string">"username"</span>: scpConf.username,</span><br><span class="line">        <span class="string">"password"</span>: scpConf.password,</span><br><span class="line">        <span class="string">"path"</span>: <span class="string">"/www/"</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure><h2 id="然并卵-1"><a href="#然并卵-1" class="headerlink" title="然并卵"></a>然并卵</h2><p>这个更过分, 连报错都没有, 就一直卡在那里…</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&amp;gt; 本文链接：&lt;a href=&quot;http://arylo.github.io/2015/07/08/javascript/js_npm-grunt-gulp-scp/&quot;&gt;http://arylo.github.io/2015/07/08/j
+      
+    
+    </summary>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/categories/Javascript/"/>
+    
+    
+      <category term="Gulp" scheme="http://arylo.github.io/tags/Gulp/"/>
+    
+      <category term="Javascript" scheme="http://arylo.github.io/tags/Javascript/"/>
+    
+      <category term="NPM" scheme="http://arylo.github.io/tags/NPM/"/>
+    
+      <category term="Grunt" scheme="http://arylo.github.io/tags/Grunt/"/>
+    
+      <category term="SCP" scheme="http://arylo.github.io/tags/SCP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Gitlab, 文件过大导致上传失败</title>
+    <link href="http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/"/>
+    <id>http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/</id>
+    <published>2015-06-28T13:16:27.000Z</published>
+    <updated>2018-05-22T04:27:31.959Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本文链接：<a href="http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/">http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/</a><br>大概需要阅读时间: 58秒</p></blockquote><hr><h1 id="先说说前面的事"><a href="#先说说前面的事" class="headerlink" title="先说说前面的事"></a>先说说前面的事</h1><p>M1已经开始步入正轨, (貌似一直测试还没有发货), 不过硬件已经开源, 需要的玩家(或者厂商)可以免费使用, 我在这里打个广告, 留下传送门: <a href="http://downloads.openwrt.org.cn/PandoraBox/PandoraBox-PBR-M1/HW/" target="_blank" rel="noopener">http://downloads.openwrt.org.cn/PandoraBox/PandoraBox-PBR-M1/HW/</a></p><h1 id="L大的召唤之术"><a href="#L大的召唤之术" class="headerlink" title="L大的召唤之术"></a>L大的召唤之术</h1><p>昨晚呢, 嗯, L大又找上我, 说他push不了, (就是自己搭的gitlab, 是服务器配置问题, 还扔了个链接我, 叫我跟着改.</p><p>嗯, 就是这个链接<a href="http://stackoverflow.com/questions/7489813/github-push-error-rpc-failed-result-22-http-code-413" target="_blank" rel="noopener">http://stackoverflow.com/questions/7489813/github-push-error-rpc-failed-result-22-http-code-413</a> 后来还有它<a href="http://blog.csdn.net/suirosu/article/details/40045983" target="_blank" rel="noopener">http://blog.csdn.net/suirosu/article/details/40045983</a></p><p>我瞧了一下, 主<a id="more"></a>要问题接入受限制了, 不过问题来了! 我该改哪里?</p><p>我和大家普及一下, 咱这服务器, 不是所有服务都一股脑地全部塞进去的, 而是用<strong>docker</strong>, 一块一块地拼上去的, 单是<strong>nginx</strong>就有两个, 一个是根的nginx, 一个是gitlab 这个container 的nginx, 难道两个都要改?<br>好吧, 我改, 改改改! 先改根nginx, 不就是在conf下加上, <code>client_max_body_size 20M;</code>, 我重启了一下服务, L大立刻说, 行了!</p><p>行了?行了?后面不用改了吗?</p><h1 id="关于后面"><a href="#关于后面" class="headerlink" title="关于后面"></a>关于后面</h1><p>其实不是后面不用改, 而是后面的, 别人已经写好了, 最大为<em>20M</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NGINX_MAX_UPLOAD_SIZE: Maximum acceptable upload size. Defaults to 20m.</span><br></pre></td></tr></table></figure></p><hr><p>这次只是我的日常记录, 干了什么, 做了什么, 留下日志, 以免后面被人说我没干事…</p><p>话说 <a href="http://www.pandorabox.org.cn/" target="_blank" rel="noopener">http://www.pandorabox.org.cn/</a> 准备可以下载最新的pandorabox 固件, 现在和朋友在准备写一个关于提供文件列表json 的组件(也为了后面的插件下载)</p><hr><blockquote><p>Arylo, 走在半栈工程师的路上, 正在学习设计和前端<br>现时加入<code>Lintel</code>的<code>PandoraBox Team</code>, 负责打游击, 俗称打杂, 5黑里的辅助<br>tomail:<a href="mailto:arylo.open@gmail.com" target="_blank" rel="noopener">arylo.open@gmail.com</a></p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;本文链接：&lt;a href=&quot;http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/&quot;&gt;http://arylo.github.io/2015/06/28/server/nginx-max-upload-size/&lt;/a&gt;&lt;br&gt;大概需要阅读时间: 58秒&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;先说说前面的事&quot;&gt;&lt;a href=&quot;#先说说前面的事&quot; class=&quot;headerlink&quot; title=&quot;先说说前面的事&quot;&gt;&lt;/a&gt;先说说前面的事&lt;/h1&gt;&lt;p&gt;M1已经开始步入正轨, (貌似一直测试还没有发货), 不过硬件已经开源, 需要的玩家(或者厂商)可以免费使用, 我在这里打个广告, 留下传送门: &lt;a href=&quot;http://downloads.openwrt.org.cn/PandoraBox/PandoraBox-PBR-M1/HW/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://downloads.openwrt.org.cn/PandoraBox/PandoraBox-PBR-M1/HW/&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;L大的召唤之术&quot;&gt;&lt;a href=&quot;#L大的召唤之术&quot; class=&quot;headerlink&quot; title=&quot;L大的召唤之术&quot;&gt;&lt;/a&gt;L大的召唤之术&lt;/h1&gt;&lt;p&gt;昨晚呢, 嗯, L大又找上我, 说他push不了, (就是自己搭的gitlab, 是服务器配置问题, 还扔了个链接我, 叫我跟着改.&lt;/p&gt;
+&lt;p&gt;嗯, 就是这个链接&lt;a href=&quot;http://stackoverflow.com/questions/7489813/github-push-error-rpc-failed-result-22-http-code-413&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://stackoverflow.com/questions/7489813/github-push-error-rpc-failed-result-22-http-code-413&lt;/a&gt; 后来还有它&lt;a href=&quot;http://blog.csdn.net/suirosu/article/details/40045983&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://blog.csdn.net/suirosu/article/details/40045983&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我瞧了一下, 主
+    
+    </summary>
+    
+      <category term="Server/Gitlab" scheme="http://arylo.github.io/categories/Server-Gitlab/"/>
+    
+    
+      <category term="docker" scheme="http://arylo.github.io/tags/docker/"/>
+    
+      <category term="gitlab" scheme="http://arylo.github.io/tags/gitlab/"/>
+    
+      <category term="nginx" scheme="http://arylo.github.io/tags/nginx/"/>
+    
+  </entry>
+  
+</feed>
